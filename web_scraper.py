@@ -23,6 +23,25 @@ def fetch_data(url):
     else:
         raise Exception(f"Failed to fetch data from {url}, status code: {response.status_code}")
 
+def save_articles(articles_list):
+    try:
+        if articles_list:
+            output_dir = "./articles"
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            splitted_article = articles_list[0].published_date.split('-')
+            year = splitted_article[0]
+            month = splitted_article[1]
+            
+            file_name = os.path.join(output_dir,f'articles_{year}_{month}.json')
+            with open(file_name, 'w', encoding="utf-8") as f:
+                json.dump([asdict(article) for article in articles_list], f, ensure_ascii=False, indent=4)
+            print(f"Data saved to {file_name}")
+        else:
+            print("No articles to save")
+    except Exception as e:
+        print(f"Failed to save articles: {e}")    
+
 class SitemapParser: 
     def __init__(self, index_url="https://www.almayadeen.net/sitemaps/all.xml"):
         self.index_url = index_url
