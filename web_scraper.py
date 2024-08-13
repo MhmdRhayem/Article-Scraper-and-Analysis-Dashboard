@@ -23,3 +23,32 @@ def fetch_data(url):
     else:
         raise Exception(f"Failed to fetch data from {url}, status code: {response.status_code}")
 
+class SitemapParser: 
+    def __init__(self, index_url="https://www.almayadeen.net/sitemaps/all.xml"):
+        self.index_url = index_url
+
+    def get_monthly_sitemap_urls(self):
+        try:
+            xml_content = fetch_data(self.index_url)
+            if xml_content:
+                soup = BeautifulSoup(xml_content, "lxml")
+                sitemaps = soup.find_all("loc")
+                sitemap_urls = [sitemap.string for sitemap in sitemaps]
+                return sitemap_urls
+            return []
+        except Exception as e:
+            print(f"Failed to parse sitemaps: {e}")
+            return []
+
+    def get_article_urls(self, sitemap_url):
+        try:
+            xml_content = fetch_data(sitemap_url)
+            if xml_content:
+                soup = BeautifulSoup(xml_content, "lxml")
+                article_urls = [loc.text for loc in soup.find_all('loc')]
+                return article_urls
+            return []
+        except Exception as e:
+            print(f"Failed to parse article urls: {e}")
+            return []
+
