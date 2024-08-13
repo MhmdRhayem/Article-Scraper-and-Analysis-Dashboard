@@ -101,3 +101,31 @@ class ArticleScraper:
         except Exception as e:
             print(f"Failed to scrape article {article_url}: {e}")
             return None
+
+def main():
+    max_articles = 500
+    article_nb = 1
+
+    parser = SitemapParser()
+    monthly_sitemaps = parser.get_monthly_sitemap_urls()
+
+    for sitemap_url in monthly_sitemaps:
+        print(f"Parsing {sitemap_url}")
+        if article_nb > max_articles:
+            break
+        article_urls = parser.get_article_urls(sitemap_url)
+        print(f"Found {len(article_urls)} articles")
+        articles = []
+
+        scraper = ArticleScraper()
+        for url in article_urls:
+            if article_nb > max_articles:
+                break
+            article = scraper.scrape_article(url)
+            if article:
+                print(f"Scraping article {article_nb} {url}")
+                article_nb += 1
+                articles.append(article)
+        save_articles(articles)
+
+main()
