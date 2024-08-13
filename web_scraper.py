@@ -52,3 +52,33 @@ class SitemapParser:
             print(f"Failed to parse article urls: {e}")
             return []
 
+
+@dataclass
+class ArticleScraper:
+
+    def scrape_article(self,article_url):
+        try:
+            xml_content = fetch_data(article_url)
+            soup = BeautifulSoup(xml_content, "lxml")
+            script = soup.find("script",{"type" : "text/tawsiyat"})
+            metadata = json.loads(script.string) if script else {}
+
+            full_text = ""
+            for p in soup.find_all("p"):
+                full_text += p.text + "\n"
+            article = Article(
+                url = article_url,
+                post_id = metadata.get('postid',''),
+                title = metadata.get('title',''),
+                keywords =metadata.get('keywords',[]),
+                thumbnail = metadata.get('thumbnail',''),
+                published_date = metadata.get('published_time',''),
+                last_updated = metadata.get('last_updated',''),
+                author = metadata.get('author',''),
+                description= metadata.get('description',''),
+                full_text = full_text
+            )
+            return article
+        except Exception as e:
+            print(f"Failed to scrape article {article_url}: {e}")
+            return None
