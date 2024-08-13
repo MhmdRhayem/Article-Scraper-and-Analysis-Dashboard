@@ -22,7 +22,7 @@ ArticleScraper is a Python project designed to scrape articles from a website us
 ## Usage 
 1. Clone the repository 
 ``` bash
-git clone url
+git clone https://github.com/MhmdRhayem/Article-Scraper.git
 ```
 2. Run the scraper
 ``` bash 
