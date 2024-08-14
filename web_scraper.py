@@ -103,7 +103,7 @@ class ArticleScraper:
             return None
 
 def main():
-    max_articles = 500
+    max_articles = 10000
     article_nb = 1
 
     parser = SitemapParser()
