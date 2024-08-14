@@ -89,7 +89,7 @@ class ArticleScraper:
                 url = article_url,
                 post_id = metadata.get('postid',''),
                 title = metadata.get('title',''),
-                keywords =metadata.get('keywords',[]),
+                keywords =metadata.get('keywords',[]).split(" "),
                 thumbnail = metadata.get('thumbnail',''),
                 published_date = metadata.get('published_time',''),
                 last_updated = metadata.get('last_updated',''),
@@ -110,9 +110,9 @@ def main():
     monthly_sitemaps = parser.get_monthly_sitemap_urls()
 
     for sitemap_url in monthly_sitemaps:
-        print(f"Parsing {sitemap_url}")
         if article_nb > max_articles:
             break
+        print(f"Parsing {sitemap_url}")
         article_urls = parser.get_article_urls(sitemap_url)
         print(f"Found {len(article_urls)} articles")
         articles = []
