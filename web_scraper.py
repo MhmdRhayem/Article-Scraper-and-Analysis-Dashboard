@@ -9,11 +9,15 @@ class Article:
     post_id : Optional[str] = None
     title : str = ""
     keywords : List[str] = field(default_factory=list)
-    description : Optional[str] = None
     thumbnail : Optional[str] = None
-    published_date : Optional[str] = None
+    video_duration : Optional[str] = None
+    word_count : Optional[int] = None
+    lang : Optional[str] = None
+    published_time : Optional[str] = None
     last_updated : Optional[str] = None
+    description : Optional[str] = None
     author : Optional[str] = None
+    classes : List[dict] = field(default_factory=list)
     full_text : Optional[str] = None
 
 def fetch_data(url):
@@ -91,10 +95,14 @@ class ArticleScraper:
                 title = metadata.get('title',''),
                 keywords =metadata.get('keywords',[]).split(" "),
                 thumbnail = metadata.get('thumbnail',''),
-                published_date = metadata.get('published_time',''),
+                video_duration= metadata.get('video_duration',''),
+                word_count = metadata.get('word_count',''),
+                lang = metadata.get('lang',''),
+                published_time = metadata.get('published_time',''),
                 last_updated = metadata.get('last_updated',''),
-                author = metadata.get('author',''),
                 description= metadata.get('description',''),
+                author = metadata.get('author',''),
+                classes= metadata.get('classes',[]),
                 full_text = full_text
             )
             return article
