@@ -33,7 +33,7 @@ def save_articles(articles_list):
             output_dir = "./articles"
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            splitted_article = articles_list[0].published_date.split('-')
+            splitted_article = articles_list[0].published_time.split('-')
             year = splitted_article[0]
             month = splitted_article[1]
             
