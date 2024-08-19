@@ -28,6 +28,28 @@ def top_authors():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_date", methods=["GET"])
+def articles_by_date():
+    pipeline = [
+        {
+            "$project": {
+                "published_date": {"$dateFromString": {"dateString": "$published_time"}}
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "$dateToString": {"format": "%Y-%m-%d", "date": "$published_date"}
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
