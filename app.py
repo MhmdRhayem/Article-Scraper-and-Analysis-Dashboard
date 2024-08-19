@@ -59,6 +59,14 @@ def articles_by_word_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_language", methods=["GET"])
+def articles_by_language():
+    pipeline = [
+        {"$group": {"_id": "$lang", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 
 if __name__ == "__main__":
