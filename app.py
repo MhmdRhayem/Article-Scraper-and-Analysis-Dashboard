@@ -79,6 +79,19 @@ def articles_by_classes():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("recent_articles", methods=["GET"])
+def recent_articles():
+    pipeline = [
+        {
+            "$project": {
+                "published_date": {"$dateFromString": {"dateString": "$published_time"}}
+            }
+        },
+        {"$sort": {"published_time": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
