@@ -68,6 +68,17 @@ def articles_by_language():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_classes", methods=["GET"])
+def articles_by_classes():
+    pipeline = [
+        {"$unwind": "$classes"},
+        {"$match": {"classes.mapping": "category"}},
+        {"$group": {"_id": "$classes.value", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
