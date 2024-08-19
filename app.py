@@ -49,6 +49,16 @@ def articles_by_date():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_word_count", methods=["GET"])
+def articles_by_word_count():
+    pipeline = [
+        {"$project": {"word_count": {"$toInt": "$word_count"}}},
+        {"$group": {"_id": "$word_count", "count": {"$sum": 1}}},
+        {"$sort": {"_id": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
