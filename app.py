@@ -180,12 +180,13 @@ def longest_articles():
             }
         },
         {"$sort": {"word_count": -1}},
-        {"$limit" : 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/shortest_articles",methods=["GET"])
+
+@app.route("/shortest_articles", methods=["GET"])
 def shortest_articles():
     pipeline = [
         {
@@ -195,24 +196,27 @@ def shortest_articles():
             }
         },
         {"$sort": {"word_count": 1}},
-        {"$limit" : 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_by_keyword_count",methods=["GET"])
+
+@app.route("/articles_by_keyword_count", methods=["GET"])
 def articles_by_keyword_count():
     pipeline = [
         {
             "$project": {
                 "keywords_count": {"$size": "$keywords"},
             }
-        }, {"$group" : {"_id" : "$keywords_count" , "articles_count" : {"$sum" : 1} }}
+        },
+        {"$group": {"_id": "$keywords_count", "articles_count": {"$sum": 1}}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_with_thumbnail",methods=["GET"])
+
+@app.route("/articles_with_thumbnail", methods=["GET"])
 def articles_with_thumbnail():
     pipeline = [
         {"$match": {"thumbnail": {"$ne": None}}},
@@ -220,6 +224,25 @@ def articles_with_thumbnail():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/articles_updated_after_publication", methods=["GET"])
+def articles_updated_after_publication():
+    pipeline = [
+        {
+            "$project": {
+                "_id": {"$toString": "$_id"},
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+                "last_updated": {"$dateFromString": {"dateString": "$last_updated"}},
+            }
+        },
+        {"$match": {"$expr": {"$gt": ["$last_updated", "$published_time"]}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
