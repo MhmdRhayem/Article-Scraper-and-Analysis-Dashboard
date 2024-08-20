@@ -79,7 +79,7 @@ def articles_by_classes():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("recent_articles", methods=["GET"])
+@app.route("/recent_articles", methods=["GET"])
 def recent_articles():
     pipeline = [
         {
@@ -92,6 +92,18 @@ def recent_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_keyword/<keyword>",methods=["GET"])
+def articles_by_keyword(keyword):
+    pipeline = [
+        {"$match":{"keywords":{"$in":[keyword]}}},
+        {
+        "$addFields": {
+            "_id": {"$toString": "$_id"}
+        }},
+        {"$project" : {"title":1}}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
