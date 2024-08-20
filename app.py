@@ -185,7 +185,7 @@ def longest_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/shortest_articles",metohds=["GET"])
+@app.route("/shortest_articles",methods=["GET"])
 def shortest_articles():
     pipeline = [
         {
@@ -208,6 +208,15 @@ def articles_by_keyword_count():
                 "keywords_count": {"$size": "$keywords"},
             }
         }, {"$group" : {"_id" : "$keywords_count" , "articles_count" : {"$sum" : 1} }}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+@app.route("/articles_with_thumbnail",methods=["GET"])
+def articles_with_thumbnail():
+    pipeline = [
+        {"$match": {"thumbnail": {"$ne": None}}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
