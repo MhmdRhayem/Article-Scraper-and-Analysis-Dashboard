@@ -144,5 +144,13 @@ def article_details(postid):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_with_video",methods=["GET"])
+def articles_with_video():
+    pipeline = [
+        {"$match" : {"video_duration" : {"$ne" : None}}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 if __name__ == "__main__":
     app.run(debug=True)
