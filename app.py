@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from pymongo import MongoClient
+from bson import ObjectId
 
 app = Flask(__name__)
 
@@ -132,6 +133,16 @@ def top_classes():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+
+@app.route("/article_details/<postid>", methods=["GET"])
+def article_details(postid):
+    postid = ObjectId(postid)
+    pipeline = [
+        {"$match": {"_id": postid}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
