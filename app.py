@@ -105,8 +105,7 @@ def recent_articles():
 def articles_by_keyword(keyword):
     pipeline = [
         {"$match": {"keywords": {"$in": [keyword]}}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}},
-        {"$project": {"title": 1, "keywords": 1}},
+        {"$project": {"_id": {"$toString": "$_id"}, "title": 1, "keywords": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -116,8 +115,7 @@ def articles_by_keyword(keyword):
 def articles_by_author(author_name):
     pipeline = [
         {"$match": {"author": author_name}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}},
-        {"$project": {"title": 1, "author": 1}},
+        {"$project": {"_id": {"$toString": "$_id"}, "title": 1, "author": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -144,13 +142,33 @@ def article_details(postid):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_with_video",methods=["GET"])
+
+@app.route("/articles_with_video", methods=["GET"])
 def articles_with_video():
     pipeline = [
-        {"$match" : {"video_duration" : {"$ne" : None}}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}}
+        {"$match": {"video_duration": {"$ne": None}}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/articles_by_year/<int:year>", methods=["GET"])
+def articles_by_year(year):
+    pipeline = [
+        {
+            "$project": {
+                "_id": {"$toString": "$_id"},
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+            }
+        },
+        {"$match": {"$expr": {"$eq": [{"$year": "$published_time"}, year]}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
