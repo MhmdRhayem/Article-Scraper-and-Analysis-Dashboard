@@ -170,5 +170,20 @@ def articles_by_year(year):
     return jsonify(result)
 
 
+@app.route("/longest_articles", methods=["GET"])
+def longest_articles():
+    pipeline = [
+        {
+            "$project": {
+                "_id": {"$toString": "$_id"},
+                "word_count": {"$toInt": "$word_count"},
+            }
+        },
+        {"$sort": {"word_count": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
