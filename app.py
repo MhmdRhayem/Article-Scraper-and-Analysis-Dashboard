@@ -7,6 +7,7 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["almayadeen"]
 collection = db["articles"]
 
+
 @app.route("/top_keywords", methods=["GET"])
 def top_keywords():
     pipeline = [
@@ -18,6 +19,7 @@ def top_keywords():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+
 @app.route("/top_authors", methods=["GET"])
 def top_authors():
     pipeline = [
@@ -27,6 +29,7 @@ def top_authors():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
 
 @app.route("/articles_by_date", methods=["GET"])
 def articles_by_date():
@@ -49,6 +52,7 @@ def articles_by_date():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+
 @app.route("/articles_by_word_count", methods=["GET"])
 def articles_by_word_count():
     pipeline = [
@@ -59,6 +63,7 @@ def articles_by_word_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+
 @app.route("/articles_by_language", methods=["GET"])
 def articles_by_language():
     pipeline = [
@@ -67,6 +72,7 @@ def articles_by_language():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
 
 @app.route("/articles_by_classes", methods=["GET"])
 def articles_by_classes():
@@ -78,6 +84,7 @@ def articles_by_classes():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
 
 @app.route("/recent_articles", methods=["GET"])
 def recent_articles():
@@ -92,18 +99,28 @@ def recent_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_by_keyword/<keyword>",methods=["GET"])
+
+@app.route("/articles_by_keyword/<keyword>", methods=["GET"])
 def articles_by_keyword(keyword):
     pipeline = [
-        {"$match":{"keywords":{"$in":[keyword]}}},
-        {
-        "$addFields": {
-            "_id": {"$toString": "$_id"}
-        }},
-        {"$project" : {"title":1}}
+        {"$match": {"keywords": {"$in": [keyword]}}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}},
+        {"$project": {"title": 1, "keywords": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/articles_by_author/<author_name>", methods=["GET"])
+def articles_by_author(author_name):
+    pipeline = [
+        {"$match": {"author": author_name}},
+        {"$addFields": {"_id": {"$toString": "$_id"}}},
+        {"$project": {"title": 1, "author": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
