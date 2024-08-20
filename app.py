@@ -180,9 +180,26 @@ def longest_articles():
             }
         },
         {"$sort": {"word_count": -1}},
+        {"$limit" : 10}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+@app.route("/shortest_articles",metohds=["GET"])
+def shortest_articles():
+    pipeline = [
+        {
+            "$project": {
+                "_id": {"$toString": "$_id"},
+                "word_count": {"$toInt": "$word_count"},
+            }
+        },
+        {"$sort": {"word_count": 1}},
+        {"$limit" : 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 
 if __name__ == "__main__":
