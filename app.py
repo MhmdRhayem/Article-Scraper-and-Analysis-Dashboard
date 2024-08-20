@@ -92,6 +92,8 @@ def recent_articles():
     pipeline = [
         {
             "$project": {
+                "_id" : 0,
+                "title":1,
                 "published_date": {"$dateFromString": {"dateString": "$published_time"}}
             }
         },
@@ -105,7 +107,7 @@ def recent_articles():
 def articles_by_keyword(keyword):
     pipeline = [
         {"$match": {"keywords": {"$in": [keyword]}}},
-        {"$project": {"_id": {"$toString": "$_id"}, "title": 1, "keywords": 1}},
+        {"$project": {"_id" : 0 ,"title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -115,7 +117,7 @@ def articles_by_keyword(keyword):
 def articles_by_author(author_name):
     pipeline = [
         {"$match": {"author": author_name}},
-        {"$project": {"_id": {"$toString": "$_id"}, "title": 1, "author": 1}},
+        {"$project": {"_id": 0 , "title": 1, "author": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -127,6 +129,7 @@ def top_classes():
         {"$unwind": "$classes"},
         {"$group": {"_id": "$classes.value", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
+        {"$limit": 10}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -137,7 +140,7 @@ def article_details(postid):
     postid = ObjectId(postid)
     pipeline = [
         {"$match": {"_id": postid}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}},
+        {"$project" : {"_id" : 0, "url" : 1, "title" : 1, "keywords" : 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -147,7 +150,7 @@ def article_details(postid):
 def articles_with_video():
     pipeline = [
         {"$match": {"video_duration": {"$ne": None}}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}},
+        {"$addFields": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -158,7 +161,8 @@ def articles_by_year(year):
     pipeline = [
         {
             "$project": {
-                "_id": {"$toString": "$_id"},
+                "_id": 0,
+                "title" : 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
@@ -175,7 +179,8 @@ def longest_articles():
     pipeline = [
         {
             "$project": {
-                "_id": {"$toString": "$_id"},
+                "_id": 0,
+                "title" : 1,
                 "word_count": {"$toInt": "$word_count"},
             }
         },
@@ -191,7 +196,8 @@ def shortest_articles():
     pipeline = [
         {
             "$project": {
-                "_id": {"$toString": "$_id"},
+                "_id": 0,
+                "title": 1,
                 "word_count": {"$toInt": "$word_count"},
             }
         },
@@ -220,7 +226,7 @@ def articles_by_keyword_count():
 def articles_with_thumbnail():
     pipeline = [
         {"$match": {"thumbnail": {"$ne": None}}},
-        {"$addFields": {"_id": {"$toString": "$_id"}}},
+        {"$project": {"_id": 0, "title" : 1, "thumbnail" : 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -231,7 +237,8 @@ def articles_updated_after_publication():
     pipeline = [
         {
             "$project": {
-                "_id": {"$toString": "$_id"},
+                "_id": 0,
+                "title" : 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
