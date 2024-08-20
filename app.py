@@ -250,6 +250,15 @@ def articles_updated_after_publication():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_coverage/<coverage>",methods=["GET"])
+def articles_by_coverage(coverage):
+    pipeline = [
+        {"$unwind":"$classes"},
+        {"$match":{"classes.mapping" : "coverage", "classes.value" : coverage}},
+        {"$project" : {"_id" : 0, "title" : 1, "author" : 1}}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
