@@ -200,7 +200,17 @@ def shortest_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-
+@app.route("/articles_by_keyword_count",methods=["GET"])
+def articles_by_keyword_count():
+    pipeline = [
+        {
+            "$project": {
+                "keywords_count": {"$size": "$keywords"},
+            }
+        }, {"$group" : {"_id" : "$keywords_count" , "articles_count" : {"$sum" : 1} }}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
