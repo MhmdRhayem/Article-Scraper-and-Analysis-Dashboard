@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from bson import ObjectId
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -37,13 +38,13 @@ def articles_by_date():
     pipeline = [
         {
             "$project": {
-                "published_date": {"$dateFromString": {"dateString": "$published_time"}}
+                "published_time": {"$dateFromString": {"dateString": "$published_time"}}
             }
         },
         {
             "$group": {
                 "_id": {
-                    "$dateToString": {"format": "%Y-%m-%d", "date": "$published_date"}
+                    "$dateToString": {"format": "%Y-%m-%d", "date": "$published_time"}
                 },
                 "count": {"$sum": 1},
             }
@@ -92,12 +93,15 @@ def recent_articles():
     pipeline = [
         {
             "$project": {
-                "_id" : 0,
-                "title":1,
-                "published_date": {"$dateFromString": {"dateString": "$published_time"}}
+                "_id": 0,
+                "title": 1,
+                "published_date": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
             }
         },
         {"$sort": {"published_time": 1}},
+        {"$limit" : 10}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -107,7 +111,7 @@ def recent_articles():
 def articles_by_keyword(keyword):
     pipeline = [
         {"$match": {"keywords": {"$in": [keyword]}}},
-        {"$project": {"_id" : 0 ,"title": 1}},
+        {"$project": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -117,7 +121,7 @@ def articles_by_keyword(keyword):
 def articles_by_author(author_name):
     pipeline = [
         {"$match": {"author": author_name}},
-        {"$project": {"_id": 0 , "title": 1, "author": 1}},
+        {"$project": {"_id": 0, "title": 1, "author": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -129,7 +133,7 @@ def top_classes():
         {"$unwind": "$classes"},
         {"$group": {"_id": "$classes.value", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
-        {"$limit": 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -140,7 +144,7 @@ def article_details(postid):
     postid = ObjectId(postid)
     pipeline = [
         {"$match": {"_id": postid}},
-        {"$project" : {"_id" : 0, "url" : 1, "title" : 1, "keywords" : 1}},
+        {"$project": {"_id": 0, "url": 1, "title": 1, "keywords": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -162,7 +166,7 @@ def articles_by_year(year):
         {
             "$project": {
                 "_id": 0,
-                "title" : 1,
+                "title": 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
@@ -180,7 +184,7 @@ def longest_articles():
         {
             "$project": {
                 "_id": 0,
-                "title" : 1,
+                "title": 1,
                 "word_count": {"$toInt": "$word_count"},
             }
         },
@@ -226,7 +230,7 @@ def articles_by_keyword_count():
 def articles_with_thumbnail():
     pipeline = [
         {"$match": {"thumbnail": {"$ne": None}}},
-        {"$project": {"_id": 0, "title" : 1, "thumbnail" : 1}},
+        {"$project": {"_id": 0, "title": 1, "thumbnail": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -238,7 +242,7 @@ def articles_updated_after_publication():
         {
             "$project": {
                 "_id": 0,
-                "title" : 1,
+                "title": 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
@@ -250,15 +254,39 @@ def articles_updated_after_publication():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_by_coverage/<coverage>",methods=["GET"])
+
+@app.route("/articles_by_coverage/<coverage>", methods=["GET"])
 def articles_by_coverage(coverage):
     pipeline = [
-        {"$unwind":"$classes"},
-        {"$match":{"classes.mapping" : "coverage", "classes.value" : coverage}},
-        {"$project" : {"_id" : 0, "title" : 1, "author" : 1}}
+        {"$unwind": "$classes"},
+        {"$match": {"classes.mapping": "coverage", "classes.value": coverage}},
+        {"$project": {"_id": 0, "title": 1, "author": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+#  /popular_keywords_last_X_days
+
+
+@app.route("/articles_by_month/<year>/<month>", methods=["GET"])
+def articles_by_month(year, month):
+    pipeline = [
+        {
+            "$project": {
+                "_id": 0,
+                "title": 1,
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+                "month" : {"$month": "$published_time"}
+            }
+        },
+        
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
