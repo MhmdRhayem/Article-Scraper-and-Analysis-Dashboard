@@ -101,7 +101,7 @@ def recent_articles():
             }
         },
         {"$sort": {"published_time": 1}},
-        {"$limit" : 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -266,7 +266,23 @@ def articles_by_coverage(coverage):
     return jsonify(result)
 
 
-#  /popular_keywords_last_X_days
+@app.route("/popular_keywords_last_X_days", methods=["GET"])
+def popular_keywords_last_X_days():
+    date_X_days_ago = datetime.utcnow() - timedelta(days=7)
+    print(date_X_days_ago)
+    pipeline = [
+        {
+            "$project": {
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+                "_id": 0,
+            }
+        },
+        {"$match": {"published_time": {"$gte": date_X_days_ago}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 
 @app.route("/articles_by_month/<year>/<month>", methods=["GET"])
@@ -279,10 +295,9 @@ def articles_by_month(year, month):
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
-                "month" : {"$month": "$published_time"}
+                "month": {"$month": "$published_time"},
             }
         },
-        
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
