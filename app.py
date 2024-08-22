@@ -381,12 +381,24 @@ def articles_containing_text(text):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_with_more_than/<int:word_count>",methods=["GET"])
+
+@app.route("/articles_with_more_than/<int:word_count>", methods=["GET"])
 def articles_with_more_than(word_count):
     pipeline = [
-        {"$project":{"_id":0, "title":1, "word_count" : {"$toInt" : "$word_count"}}},
-        {"$match" : {"word_count" : {"$gte" : word_count}}},
-        {"$sort" : {"word_count" : 1}}
+        {"$project": {"_id": 0, "title": 1, "word_count": {"$toInt": "$word_count"}}},
+        {"$match": {"word_count": {"$gte": word_count}}},
+        {"$sort": {"word_count": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+@app.route("/articles_grouped_by_coverage",methods=["GET"])
+def articles_grouped_by_coverage():
+    pipeline = [
+        {"$unwind" : "$classes"},
+        {"$match" : {"classes.mapping" : "coverage"}},
+        {"$group" : {"_id" : "$classes.value", "count" : {"$sum" : 1}}},
+        {"$sort" : {"count" : 1}}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
