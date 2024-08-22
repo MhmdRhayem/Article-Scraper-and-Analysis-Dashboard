@@ -424,6 +424,15 @@ def articles_last_X_hours():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_title_length",methods=["GET"])
+def articles_by_title_length():
+    pipeline = [
+        {"$group"  : {"_id" : {"$strLenCP": "$title"}, "count" : {"$sum" : 1}}},
+        {"$sort" : {"count" : 1}}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
