@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from pymongo import MongoClient
+from pymongo import MongoClient, TEXT
 from bson import ObjectId
 from datetime import datetime, timedelta
 
@@ -366,6 +366,17 @@ def articles_by_specific_date(date):
                 }
             }
         },
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
+@app.route("/articles_containing_text/<text>", methods=["GET"])
+def articles_containing_text(text):
+    collection.create_index([("full_text", TEXT)])
+    pipeline = [
+        {"$match": {"$text": {"$search": text}}},
+        {"$project": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
