@@ -294,7 +294,7 @@ def articles_by_month(year, month):
                 "title": 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
-                }
+                },
             }
         },
         {
@@ -302,11 +302,26 @@ def articles_by_month(year, month):
                 "$expr": {
                     "$and": [
                         {"$eq": [{"$year": "$published_time"}, year]},
-                        {"$eq": [{"$month": "$published_time"}, month]}
+                        {"$eq": [{"$month": "$published_time"}, month]},
                     ]
                 }
             }
-        }
+        },
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
+@app.route("/articles_by_word_count_range/<int:min>/<int:max>", methods=["GET"])
+def articles_by_word_count_range(min, max):
+    pipeline = [
+        {"$project": {"_id": 0, "title": 1, "word_count": {"$toInt": "$word_count"}}},
+        {
+            "$match": {
+                "$and": [{"word_count": {"$gte": min}}, {"word_count": {"$lte": max}}]
+            }
+        },
+        {"$sort" : {"word_count" : 1}}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
