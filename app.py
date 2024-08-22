@@ -321,19 +321,55 @@ def articles_by_word_count_range(min, max):
                 "$and": [{"word_count": {"$gte": min}}, {"word_count": {"$lte": max}}]
             }
         },
-        {"$sort" : {"word_count" : 1}}
+        {"$sort": {"word_count": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_with_specific_keyword_count/<int:count>",methods=["GET"])
+
+@app.route("/articles_with_specific_keyword_count/<int:count>", methods=["GET"])
 def articles_with_specific_keyword_count(count):
     pipeline = [
-        {"$project" : {"_id" : 0 , "title" : 1, "keywords_count" : {"$size" : "$keywords"}}}
-        , {"$match" : {"keywords_count" : count}}
-    ]    
+        {"$project": {"_id": 0, "title": 1, "keywords_count": {"$size": "$keywords"}}},
+        {"$match": {"keywords_count": count}},
+    ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/articles_by_specific_date/<date>", methods=["GET"])
+def articles_by_specific_date(date):
+    date_format = "%Y-%m-%d"
+    date = str(datetime.strptime(date, date_format).date())
+
+    pipeline = [
+        {
+            "$project": {
+                "_id": 0,
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+            }
+        },
+        {
+            "$match": {
+                "$expr": {
+                    "$eq": [
+                        {
+                            "$dateToString": {
+                                "date": "$published_time",
+                                "format": date_format,
+                            }
+                        },
+                        date,
+                    ]
+                }
+            }
+        },
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
