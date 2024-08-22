@@ -285,7 +285,7 @@ def popular_keywords_last_X_days():
     return jsonify(result)
 
 
-@app.route("/articles_by_month/<year>/<month>", methods=["GET"])
+@app.route("/articles_by_month/<int:year>/<int:month>", methods=["GET"])
 def articles_by_month(year, month):
     pipeline = [
         {
@@ -294,10 +294,19 @@ def articles_by_month(year, month):
                 "title": 1,
                 "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
-                },
-                "month": {"$month": "$published_time"},
+                }
             }
         },
+        {
+            "$match": {
+                "$expr": {
+                    "$and": [
+                        {"$eq": [{"$year": "$published_time"}, year]},
+                        {"$eq": [{"$month": "$published_time"}, month]}
+                    ]
+                }
+            }
+        }
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
