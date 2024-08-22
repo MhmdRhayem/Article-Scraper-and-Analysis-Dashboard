@@ -268,7 +268,8 @@ def articles_by_coverage(coverage):
 
 @app.route("/popular_keywords_last_X_days", methods=["GET"])
 def popular_keywords_last_X_days():
-    date_X_days_ago = datetime.utcnow() - timedelta(days=7)
+    days = 7
+    date_X_days_ago = datetime.utcnow() - timedelta(days=days)
     print(date_X_days_ago)
     pipeline = [
         {
@@ -392,16 +393,37 @@ def articles_with_more_than(word_count):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_grouped_by_coverage",methods=["GET"])
+
+@app.route("/articles_grouped_by_coverage", methods=["GET"])
 def articles_grouped_by_coverage():
     pipeline = [
-        {"$unwind" : "$classes"},
-        {"$match" : {"classes.mapping" : "coverage"}},
-        {"$group" : {"_id" : "$classes.value", "count" : {"$sum" : 1}}},
-        {"$sort" : {"count" : 1}}
+        {"$unwind": "$classes"},
+        {"$match": {"classes.mapping": "coverage"}},
+        {"$group": {"_id": "$classes.value", "count": {"$sum": 1}}},
+        {"$sort": {"count": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/articles_last_X_hours", methods=["GET"])
+def articles_last_X_hours():
+    hours = 24
+    date_X_hours_ago = datetime.utcnow() - timedelta(hours=hours)
+    pipeline = [
+        {
+            "$project": {
+                "published_time": {
+                    "$dateFromString": {"dateString": "$published_time"}
+                },
+                "_id": 0,
+            }
+        },
+        {"$match": {"published_time": {"$gte": date_X_hours_ago}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
