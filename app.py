@@ -289,6 +289,38 @@ def popular_keywords_last_X_days(day):
 def articles_by_month(year, month):
     pipeline = [
         {
+            "$match": {
+                "$expr": {
+                    "$and": [
+                        {
+                            "$eq": [
+                                {
+                                    "$year": {
+                                        "$dateFromString": {
+                                            "dateString": "$published_time"
+                                        }
+                                    }
+                                },
+                                year,
+                            ]
+                        },
+                        {
+                            "$eq": [
+                                {
+                                    "$month": {
+                                        "$dateFromString": {
+                                            "dateString": "$published_time"
+                                        }
+                                    }
+                                },
+                                month,
+                            ]
+                        },
+                    ]
+                }
+            }
+        },
+        {
             "$project": {
                 "_id": 0,
                 "title": 1,
@@ -297,16 +329,7 @@ def articles_by_month(year, month):
                 },
             }
         },
-        {
-            "$match": {
-                "$expr": {
-                    "$and": [
-                        {"$eq": [{"$year": "$published_time"}, year]},
-                        {"$eq": [{"$month": "$published_time"}, month]},
-                    ]
-                }
-            }
-        },
+        {"$sort" : {"published_time" : 1}}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
