@@ -406,29 +406,31 @@ def articles_grouped_by_coverage():
     return jsonify(result)
 
 
-@app.route("/articles_last_X_hours", methods=["GET"])
-def articles_last_X_hours():
-    hours = 24
-    date_X_hours_ago = datetime.utcnow() - timedelta(hours=hours)
+@app.route("/articles_last_X_hours/<int:hour>", methods=["GET"])
+def articles_last_X_hours(hour):
+    date_X_hours_ago = datetime.utcnow() - timedelta(hours=hour)
     pipeline = [
         {
-            "$project": {
-                "published_time": {
-                    "$dateFromString": {"dateString": "$published_time"}
-                },
-                "_id": 0,
+            "$match": {
+                "$expr": {
+                    "$gte": [
+                        {"$dateFromString": {"dateString": "$published_time"}},
+                        date_X_hours_ago,
+                    ]
+                }
             }
         },
-        {"$match": {"published_time": {"$gte": date_X_hours_ago}}},
+        {"$project": {"title": 1, "_id": 0}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_by_title_length",methods=["GET"])
+
+@app.route("/articles_by_title_length", methods=["GET"])
 def articles_by_title_length():
     pipeline = [
-        {"$group"  : {"_id" : {"$strLenCP": "$title"}, "count" : {"$sum" : 1}}},
-        {"$sort" : {"count" : 1}}
+        {"$group": {"_id": {"$strLenCP": "$title"}, "count": {"$sum": 1}}},
+        {"$sort": {"count": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
