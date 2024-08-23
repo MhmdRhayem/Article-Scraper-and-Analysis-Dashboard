@@ -36,19 +36,20 @@ def top_authors():
 @app.route("/articles_by_date", methods=["GET"])
 def articles_by_date():
     pipeline = [
-        {
-            "$project": {
-                "published_time": {"$dateFromString": {"dateString": "$published_time"}}
-            }
-        },
-        {
-            "$group": {
-                "_id": {
-                    "$dateToString": {"format": "%Y-%m-%d", "date": "$published_time"}
-                },
-                "count": {"$sum": 1},
-            }
-        },
+            {"$group": {
+            "_id": {
+                "$dateToString": {
+                    "format": "%Y-%m-%d",
+                    "date": {
+                        "$dateFromString": {
+                            "dateString": "$published_time"
+                        }
+                    }
+                }
+            },
+            "count": { "$sum": 1 }
+        }
+    },
         {"$sort": {"_id": -1}},
     ]
     result = list(collection.aggregate(pipeline))
