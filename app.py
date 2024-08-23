@@ -161,15 +161,20 @@ def articles_with_video():
 def articles_by_year(year):
     pipeline = [
         {
-            "$project": {
-                "_id": 0,
-                "title": 1,
-                "published_time": {
-                    "$dateFromString": {"dateString": "$published_time"}
-                },
+            "$match": {
+                "$expr": {
+                    "$eq": [
+                        {
+                            "$year": {
+                                "$dateFromString": {"dateString": "$published_time"}
+                            }
+                        },
+                        year,
+                    ]
+                }
             }
         },
-        {"$match": {"$expr": {"$eq": [{"$year": "$published_time"}, year]}}},
+        {"$project": {"title": 1, "_id": 0, "published_time": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
