@@ -238,16 +238,16 @@ def articles_with_thumbnail():
 def articles_updated_after_publication():
     pipeline = [
         {
-            "$project": {
-                "_id": 0,
-                "title": 1,
-                "published_time": {
-                    "$dateFromString": {"dateString": "$published_time"}
-                },
-                "last_updated": {"$dateFromString": {"dateString": "$last_updated"}},
+            "$match": {
+                "$expr": {
+                    "$gt": [
+                        {"$dateFromString": {"dateString": "$last_updated"}},
+                        {"$dateFromString": {"dateString": "$published_time"}},
+                    ]
+                }
             }
         },
-        {"$match": {"$expr": {"$gt": ["$last_updated", "$published_time"]}}},
+        {"$project": {"_id": 0, "title": 1, "published_time": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
