@@ -358,8 +358,12 @@ def articles_by_word_count_range(min, max):
 @app.route("/articles_with_specific_keyword_count/<int:count>", methods=["GET"])
 def articles_with_specific_keyword_count(count):
     pipeline = [
-        {"$project": {"_id": 0, "title": 1, "keywords_count": {"$size": "$keywords"}}},
-        {"$match": {"keywords_count": count}},
+        {"$match" : {
+            "$expr": {
+                "$eq" : [{"$size" : "$keywords"}, count]
+            }
+        }},
+        {"$project": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
