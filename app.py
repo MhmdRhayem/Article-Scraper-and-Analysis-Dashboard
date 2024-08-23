@@ -266,21 +266,22 @@ def articles_by_coverage(coverage):
     return jsonify(result)
 
 
-@app.route("/popular_keywords_last_X_days", methods=["GET"])
-def popular_keywords_last_X_days():
-    days = 7
-    date_X_days_ago = datetime.utcnow() - timedelta(days=days)
+@app.route("/popular_keywords_last_X_days/<int:day>", methods=["GET"])
+def popular_keywords_last_X_days(day):
+    date_X_days_ago = datetime.utcnow() - timedelta(days=day)
     print(date_X_days_ago)
     pipeline = [
         {
-            "$project": {
-                "published_time": {
-                    "$dateFromString": {"dateString": "$published_time"}
-                },
-                "_id": 0,
+            "$match": {
+                "$expr": {
+                    "$gte": [
+                        {"$dateFromString": {"dateString": "$published_time"}},
+                        date_X_days_ago,
+                    ]
+                }
             }
         },
-        {"$match": {"published_time": {"$gte": date_X_days_ago}}},
+        {"$project": {"title": 1, "_id": 0}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
