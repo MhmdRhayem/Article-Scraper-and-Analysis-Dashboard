@@ -417,8 +417,12 @@ def articles_containing_text(text):
 @app.route("/articles_with_more_than/<int:word_count>", methods=["GET"])
 def articles_with_more_than(word_count):
     pipeline = [
+        {"$match" : {
+            "$expr" : {
+                "$gte" : [{"$toInt": "$word_count"},word_count]
+            }
+        }},
         {"$project": {"_id": 0, "title": 1, "word_count": {"$toInt": "$word_count"}}},
-        {"$match": {"word_count": {"$gte": word_count}}},
         {"$sort": {"word_count": 1}},
     ]
     result = list(collection.aggregate(pipeline))
