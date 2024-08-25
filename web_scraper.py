@@ -6,7 +6,7 @@ import os, requests, json
 @dataclass
 class Article:
     url : str
-    post_id : Optional[str] = None
+    postid : Optional[str] = None
     title : str = ""
     keywords : List[str] = field(default_factory=list)
     thumbnail : Optional[str] = None
@@ -91,7 +91,7 @@ class ArticleScraper:
                 full_text += p.text + "\n"
             article = Article(
                 url = article_url,
-                post_id = metadata.get('postid',''),
+                postid = metadata.get('postid',''),
                 title = metadata.get('title',''),
                 keywords =metadata.get('keywords',[]).split(" "),
                 thumbnail = metadata.get('thumbnail',''),
