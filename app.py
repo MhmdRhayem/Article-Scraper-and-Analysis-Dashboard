@@ -2,8 +2,10 @@ from flask import Flask, jsonify
 from pymongo import MongoClient, TEXT
 from bson import ObjectId
 from datetime import datetime, timedelta
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["almayadeen"]
@@ -47,7 +49,7 @@ def articles_by_date():
                 "count": {"$sum": 1},
             }
         },
-        {"$sort": {"_id": -1}},
+        {"$sort": {"_id": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
