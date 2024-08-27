@@ -59,7 +59,7 @@ def articles_by_date():
 def articles_by_word_count():
     pipeline = [
         {"$group": {"_id": {"$toInt": "$word_count"}, "count": {"$sum": 1}}},
-        {"$sort": {"_id": -1}},
+        {"$sort": {"_id": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
