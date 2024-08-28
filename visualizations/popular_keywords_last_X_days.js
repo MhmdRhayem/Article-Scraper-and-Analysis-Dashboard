@@ -96,7 +96,6 @@ am5.ready(async function () {
       centerY: am5.p50,
     })
   );
-
   async function getPopularKeywordsLastXDays(day) {
     const response = await fetch(
       "http://127.0.0.1:5000/popular_keywords_last_X_days/" + day.toString()
@@ -104,19 +103,21 @@ am5.ready(async function () {
     const data = await response.json();
     return data;
   }
-  
+
   let data = await getPopularKeywordsLastXDays(15);
+
+  document
+    .getElementById("fetchButton")
+    .addEventListener("click", async function () {
+      const day = document.getElementById("postIdInput").value;
+      let data = await getPopularKeywordsLastXDays(day);
+      xAxis.data.setAll(data);
+      series.data.setAll(data);
+    });
 
   xAxis.data.setAll(data);
   series.data.setAll(data);
 
   series.appear(1000);
   chart.appear(1000, 100);
-});
-
-document.getElementById("fetchButton").addEventListener("click", async function () {
-  const day = document.getElementById("postIdInput").value;
-  let data = await getPopularKeywordsLastXDays(day);
-  xAxis.data.setAll(data);
-  series.data.setAll(data);
 });
