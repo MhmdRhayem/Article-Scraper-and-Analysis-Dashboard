@@ -77,7 +77,7 @@ am5.ready(async function () {
 
   const min_year = 2012;
   const max_year = new Date().getFullYear();
-  let year = min_year
+  let year = min_year;
   data = [];
 
   while (year <= max_year) {
@@ -85,7 +85,7 @@ am5.ready(async function () {
       "http://127.0.0.1:5000/articles_by_year/" + year.toString()
     );
     articles = await response.json();
-    console.log(articles)
+    console.log(articles);
     if (articles.length) {
       data.push({ _id: year, count: articles[0].count });
     }
@@ -103,6 +103,33 @@ am5.ready(async function () {
       behavior: "none",
       xAxis: xAxis,
       yAxis: yAxis,
+    })
+  );
+
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Year",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
     })
   );
 
