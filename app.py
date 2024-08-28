@@ -324,7 +324,7 @@ def articles_by_month(year, month):
                         "$month": {"$dateFromString": {"dateString": "$published_time"}}
                     },
                 },
-                "article_count": {"$sum": 1},
+                "count": {"$sum": 1},
             }
         },
         {"$match": {"_id.year": year, "_id.month": month}},
@@ -333,7 +333,7 @@ def articles_by_month(year, month):
                 "_id": 0,  # Exclude the _id field
                 "year": "$_id.year",
                 "month": "$_id.month",
-                "article_count": 1,
+                "count": 1,
             }
         },
     ]
