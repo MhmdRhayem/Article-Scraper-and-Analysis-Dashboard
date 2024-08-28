@@ -11,9 +11,11 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["almayadeen"]
 collection = db["articles"]
 
-@app.route("/articles_count",methods = ["GET"])
+
+@app.route("/articles_count", methods=["GET"])
 def articles_count():
     return jsonify(collection.count_documents(filter={}))
+
 
 @app.route("/top_keywords", methods=["GET"])
 def top_keywords():
@@ -146,7 +148,15 @@ def article_details(postid):
     postid = ObjectId(postid)
     pipeline = [
         {"$match": {"_id": postid}},
-        {"$project": {"_id": 0, "url": 1, "title": 1, "keywords": 1, "published_time": 1}},
+        {
+            "$project": {
+                "_id": 0,
+                "url": 1,
+                "title": 1,
+                "keywords": 1,
+                "published_time": 1,
+            }
+        },
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -179,7 +189,14 @@ def articles_by_year(year):
                 }
             }
         },
-        {"$project": {"title": 1, "_id": 0, "published_time": 1}},
+        {
+            "$group": {
+                "_id": {
+                    "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                },
+                "count": {"$sum": 1},
+            }
+        },
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -363,11 +380,7 @@ def articles_by_word_count_range(min, max):
 @app.route("/articles_with_specific_keyword_count/<int:count>", methods=["GET"])
 def articles_with_specific_keyword_count(count):
     pipeline = [
-        {"$match" : {
-            "$expr": {
-                "$eq" : [{"$size" : "$keywords"}, count]
-            }
-        }},
+        {"$match": {"$expr": {"$eq": [{"$size": "$keywords"}, count]}}},
         {"$project": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
@@ -422,11 +435,7 @@ def articles_containing_text(text):
 @app.route("/articles_with_more_than/<int:word_count>", methods=["GET"])
 def articles_with_more_than(word_count):
     pipeline = [
-        {"$match" : {
-            "$expr" : {
-                "$gte" : [{"$toInt": "$word_count"},word_count]
-            }
-        }},
+        {"$match": {"$expr": {"$gte": [{"$toInt": "$word_count"}, word_count]}}},
         {"$project": {"_id": 0, "title": 1, "word_count": {"$toInt": "$word_count"}}},
         {"$sort": {"word_count": 1}},
     ]
