@@ -47,16 +47,6 @@ am5.ready(async function () {
     })
   );
 
-  xAxis.children.push(
-    am5.Label.new(root, {
-      text: "Word Count",
-      x: am5.p100,
-      centerX: am5.p100,
-      centerY: am5.p0,
-      paddingTop: 5,
-    })
-  );
-
   var series = chart.series.push(
     am5xy.ColumnSeries.new(root, {
       name: "Series 1",
@@ -119,6 +109,33 @@ am5.ready(async function () {
       behavior: "none",
       xAxis: xAxis,
       yAxis: yAxis,
+    })
+  );
+
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Word Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Title",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
     })
   );
 
