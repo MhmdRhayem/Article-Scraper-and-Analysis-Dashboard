@@ -65,7 +65,7 @@ tr:hover {
   outline: none;
 }
 
-#fetchButton {
+.fetchButton {
   padding: 12px 20px;
   background-color: #4caf50;
   color: white;
@@ -77,12 +77,12 @@ tr:hover {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#fetchButton:hover {
+.fetchButton:hover {
   background-color: #45a049;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-#fetchButton:active {
+.fetchButton:active {
   background-color: #3e8e41;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

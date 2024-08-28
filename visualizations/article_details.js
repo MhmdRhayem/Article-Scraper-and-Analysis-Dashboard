@@ -7,10 +7,11 @@ postIdInput.id = "postIdInput";
 postIdInput.placeholder = "Enter Article ID";
 inputContainer.appendChild(postIdInput);
 
-const fetchButton = document.createElement("button");
-fetchButton.id = "fetchButton";
-fetchButton.textContent = "Fetch Data";
-inputContainer.appendChild(fetchButton);
+const buttonFetchArticleDetails = document.createElement("button");
+buttonFetchArticleDetails.id = "buttonFetchArticleDetails";
+buttonFetchArticleDetails.textContent = "Fetch Data";
+buttonFetchArticleDetails.classList.add("fetchButton");
+inputContainer.appendChild(buttonFetchArticleDetails);
 
 document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
 
@@ -84,7 +85,7 @@ async function fetchAndPopulateTable(postid) {
   }
 }
 
-document.getElementById("fetchButton").addEventListener("click", function () {
+document.getElementById("buttonFetchArticleDetails").addEventListener("click", function () {
   const postid = document.getElementById("postIdInput").value;
   fetchAndPopulateTable(postid);
 });
