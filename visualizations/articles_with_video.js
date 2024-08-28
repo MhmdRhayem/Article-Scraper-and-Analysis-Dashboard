@@ -75,12 +75,25 @@ am5.ready(async function () {
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  async function getTopAuthors() {
-    const response = await fetch("http://127.0.0.1:5000/top_authors");
+  async function getArticlesWithVideo() {
+    const response = await fetch("http://127.0.0.1:5000/articles_with_video");
     const data = await response.json();
     return data;
   }
-  let data = await getTopAuthors();
+
+  async function getAllArticlesCount() {
+    const response = await fetch("http://127.0.0.1:5000/articles_count");
+    return await response.json();
+  }
+
+  let articles_with_video_count = (await getArticlesWithVideo()).length;
+  let articles_without_video_count =
+    (await getAllArticlesCount()) - articles_with_video_count;
+
+  data = [
+    { _id: "Articles Without Video", count: articles_without_video_count },
+    { _id: "Articles With Video", count: articles_with_video_count },
+  ];
 
   yAxis.data.setAll(data);
   series.data.setAll(data);
