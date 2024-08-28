@@ -11,6 +11,9 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["almayadeen"]
 collection = db["articles"]
 
+@app.route("/articles_count",methods = ["GET"])
+def articles_count():
+    return jsonify(collection.count_documents(filter={}))
 
 @app.route("/top_keywords", methods=["GET"])
 def top_keywords():
@@ -153,7 +156,7 @@ def article_details(postid):
 def articles_with_video():
     pipeline = [
         {"$match": {"video_duration": {"$ne": None}}},
-        {"$addFields": {"_id": 0, "title": 1}},
+        {"$project": {"_id": 0, "title": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
