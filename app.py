@@ -143,7 +143,7 @@ def article_details(postid):
     postid = ObjectId(postid)
     pipeline = [
         {"$match": {"_id": postid}},
-        {"$project": {"_id": 0, "url": 1, "title": 1, "keywords": 1}},
+        {"$project": {"_id": 0, "url": 1, "title": 1, "keywords": 1, "published_time": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
