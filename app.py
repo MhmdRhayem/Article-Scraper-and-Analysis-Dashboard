@@ -127,7 +127,15 @@ def articles_by_keyword(keyword):
 def articles_by_author(author_name):
     pipeline = [
         {"$match": {"author": author_name}},
-        {"$project": {"_id": 0, "title": 1, "author": 1}},
+        {
+            "$project": {
+                "_id": 0,
+                "url": 1,
+                "title": 1,
+                "keywords": 1,
+                "published_time": 1,
+            }
+        },
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
