@@ -98,13 +98,15 @@ def recent_articles():
         {
             "$project": {
                 "_id": 0,
+                "url": 1,
                 "title": 1,
-                "published_date": {
+                "keywords": 1,
+                "published_time": {
                     "$dateFromString": {"dateString": "$published_time"}
                 },
             }
         },
-        {"$sort": {"published_time": 1}},
+        {"$sort": {"published_time": -1}},
         {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
