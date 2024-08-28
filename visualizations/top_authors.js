@@ -77,7 +77,7 @@ am5.ready(async function () {
   
   xAxis.children.push(
     am5.Label.new(root, {
-      text: "Count",
+      text: "Articles Count",
       fontSize: "1em",
       fontWeight: "600",
       fill: am5.color(0x555555),

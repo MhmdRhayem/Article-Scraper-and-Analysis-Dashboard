@@ -64,6 +64,42 @@ am5.ready(async function () {
     })
   );
 
+  series.bullets.push(function () {
+    return am5.Bullet.new(root, {
+      sprite: am5.Circle.new(root, {
+        radius: 5,
+        fill: series.get("fill"),
+      }),
+    });
+  });
+
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Date",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
+    })
+  );
+
   async function getArticlesByDate() {
     const response = await fetch("http://127.0.0.1:5000/articles_by_date");
     const data = await response.json();
