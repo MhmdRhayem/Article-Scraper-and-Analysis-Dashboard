@@ -56,14 +56,44 @@ am5.ready(async function () {
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  async function getTopAuthors() {
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Word Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
+    })
+  );
+
+  async function getArticlesByWordCount() {
     const response = await fetch(
       "http://127.0.0.1:5000/articles_by_word_count"
     );
     const data = await response.json();
     return data;
   }
-  let data = await getTopAuthors();
+  let data = await getArticlesByWordCount();
+  if (data[0]._id == 0){
+    data.splice(0,1);
+  }
 
   xAxis.data.setAll(data);
   series.data.setAll(data);
