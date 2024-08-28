@@ -4,6 +4,7 @@ inputContainer.className = "input-container";
 const postIdInput = document.createElement("input");
 postIdInput.type = "text";
 postIdInput.id = "postIdInput";
+postIdInput.classList.add("InputField");
 postIdInput.placeholder = "Enter Article ID";
 inputContainer.appendChild(postIdInput);
 
