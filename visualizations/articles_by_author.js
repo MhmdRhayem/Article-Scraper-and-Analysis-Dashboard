@@ -131,6 +131,19 @@ am5.ready(async function () {
     })
   );
 
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
   series.appear(1000);
   chart.appear(1000, 100);
 });
