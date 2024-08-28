@@ -1,11 +1,11 @@
 const inputContainer = document.createElement("div");
 inputContainer.className = "input-container";
 
-const postIdInput = document.createElement("input");
-postIdInput.type = "text";
-postIdInput.id = "postIdInput";
-postIdInput.placeholder = "Enter Day";
-inputContainer.appendChild(postIdInput);
+const dateInput = document.createElement("input");
+dateInput.type = "text";
+dateInput.id = "dateInput";
+dateInput.placeholder = "Enter Day";
+inputContainer.appendChild(dateInput);
 
 const fetchButton = document.createElement("button");
 fetchButton.id = "fetchButton";
@@ -109,7 +109,7 @@ am5.ready(async function () {
   document
     .getElementById("fetchButton")
     .addEventListener("click", async function () {
-      const day = document.getElementById("postIdInput").value;
+      const day = document.getElementById("dateInput").value;
       let data = await getPopularKeywordsLastXDays(day);
       xAxis.data.setAll(data);
       series.data.setAll(data);
