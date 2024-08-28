@@ -292,20 +292,20 @@ def popular_keywords_last_X_days(day):
     date_X_days_ago = datetime.utcnow() - timedelta(days=day)
     print(date_X_days_ago)
     pipeline = [
-            {
-                "$match": {
-                    "$expr": {
-                        "$gte": [
-                            {"$dateFromString": {"dateString": "$published_time"}},
-                            date_X_days_ago,
-                        ]
-                    }
+        {
+            "$match": {
+                "$expr": {
+                    "$gte": [
+                        {"$dateFromString": {"dateString": "$published_time"}},
+                        date_X_days_ago,
+                    ]
                 }
-            },
-            {"$unwind": "$keywords"},
-            {"$group": {"_id" : "$keywords", "count": {"$sum": 1}}},
-            {"$sort" : {"count" : -1}},
-            {"$limit" : 15}
+            }
+        },
+        {"$unwind": "$keywords"},
+        {"$group": {"_id": "$keywords", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 15},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -315,47 +315,27 @@ def popular_keywords_last_X_days(day):
 def articles_by_month(year, month):
     pipeline = [
         {
-            "$match": {
-                "$expr": {
-                    "$and": [
-                        {
-                            "$eq": [
-                                {
-                                    "$year": {
-                                        "$dateFromString": {
-                                            "dateString": "$published_time"
-                                        }
-                                    }
-                                },
-                                year,
-                            ]
-                        },
-                        {
-                            "$eq": [
-                                {
-                                    "$month": {
-                                        "$dateFromString": {
-                                            "dateString": "$published_time"
-                                        }
-                                    }
-                                },
-                                month,
-                            ]
-                        },
-                    ]
-                }
+            "$group": {
+                "_id": {
+                    "year": {
+                        "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                    "month": {
+                        "$month": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                },
+                "article_count": {"$sum": 1},
             }
         },
+        {"$match": {"_id.year": year, "_id.month": month}},
         {
             "$project": {
-                "_id": 0,
-                "title": 1,
-                "published_time": {
-                    "$dateFromString": {"dateString": "$published_time"}
-                },
+                "_id": 0,  # Exclude the _id field
+                "year": "$_id.year",
+                "month": "$_id.month",
+                "article_count": 1,
             }
         },
-        {"$sort": {"published_time": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
