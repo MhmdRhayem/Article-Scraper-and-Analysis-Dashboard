@@ -91,8 +91,8 @@ am5.ready(async function () {
     (await getAllArticlesCount()) - articles_with_video_count;
 
   data = [
-    { _id: "Articles Without Video", count: articles_without_video_count },
-    { _id: "Articles With Video", count: articles_with_video_count },
+    { _id: "Without Video", count: articles_without_video_count },
+    { _id: "With Video", count: articles_with_video_count },
   ];
 
   yAxis.data.setAll(data);
@@ -104,6 +104,33 @@ am5.ready(async function () {
       behavior: "none",
       xAxis: xAxis,
       yAxis: yAxis,
+    })
+  );
+
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Article Type",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
     })
   );
 
