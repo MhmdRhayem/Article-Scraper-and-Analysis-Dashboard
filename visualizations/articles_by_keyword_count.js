@@ -59,6 +59,9 @@ am5.ready(async function () {
   xAxis.children.push(
     am5.Label.new(root, {
       text: "Keywords Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
       x: am5.p50,
       centerX: am5.p50,
       centerY: am5.p100,
@@ -66,14 +69,17 @@ am5.ready(async function () {
     })
   );
 
-  yAxis.children.push(
+  yAxis.children.unshift(
     am5.Label.new(root, {
       text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
       rotation: -90,
       y: am5.p50,
-      centerX: am5.p50,
       centerY: am5.p50,
-      dx: -20,
+      centerX: am5.p100,
+      dx: -30,
     })
   );
 
