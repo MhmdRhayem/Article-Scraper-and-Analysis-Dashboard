@@ -305,6 +305,7 @@ def popular_keywords_last_X_days(day):
             {"$unwind": "$keywords"},
             {"$group": {"_id" : "$keywords", "count": {"$sum": 1}}},
             {"$sort" : {"count" : -1}},
+            {"$limit" : 15}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
