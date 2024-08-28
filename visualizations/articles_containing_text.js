@@ -5,7 +5,7 @@ const textInput = document.createElement("input");
 textInput.type = "text";
 textInput.id = "textInput";
 textInput.classList.add("InputField");
-textInput.placeholder = "Enter Article ID";
+textInput.placeholder = "Enter Text";
 inputContainer.appendChild(textInput);
 
 const buttonFetchArticlesCount = document.createElement("button");
