@@ -91,7 +91,7 @@ am5.ready(async function () {
     }
     year++;
   }
-
+  data.reverse();
   console.log(data);
 
   yAxis.data.setAll(data);
