@@ -80,24 +80,6 @@ am5.ready(async function () {
     });
   });
 
-  xAxis.children.push(
-    am5.Label.new(root, {
-      text: "Keywords",
-      x: am5.p50,
-      centerX: am5.p50,
-      centerY: am5.p100,
-    })
-  );
-
-  yAxis.children.push(
-    am5.Label.new(root, {
-      text: "Count",
-      rotation: -90,
-      y: am5.p50,
-      centerX: am5.p50,
-      centerY: am5.p50,
-    })
-  );
   async function getPopularKeywordsLastXDays(day) {
     const response = await fetch(
       "http://127.0.0.1:5000/popular_keywords_last_X_days/" + day.toString()
@@ -116,6 +98,33 @@ am5.ready(async function () {
       xAxis.data.setAll(data);
       series.data.setAll(data);
     });
+
+  xAxis.children.push(
+    am5.Label.new(root, {
+      text: "Keywords",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      x: am5.p50,
+      centerX: am5.p50,
+      centerY: am5.p100,
+      dy: 20,
+    })
+  );
+
+  yAxis.children.unshift(
+    am5.Label.new(root, {
+      text: "Articles Count",
+      fontSize: "1em",
+      fontWeight: "600",
+      fill: am5.color(0x555555),
+      rotation: -90,
+      y: am5.p50,
+      centerY: am5.p50,
+      centerX: am5.p100,
+      dx: -30,
+    })
+  );
 
   xAxis.data.setAll(data);
   series.data.setAll(data);

@@ -340,7 +340,7 @@ def articles_by_month(year, month):
         {"$match": {"_id.year": year, "_id.month": month}},
         {
             "$project": {
-                "_id": 0,  # Exclude the _id field
+                "_id": 0,
                 "year": "$_id.year",
                 "month": "$_id.month",
                 "count": 1,
