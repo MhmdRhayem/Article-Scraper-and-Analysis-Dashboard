@@ -222,13 +222,8 @@ def longest_articles():
 @app.route("/shortest_articles", methods=["GET"])
 def shortest_articles():
     pipeline = [
+        {"$match": {"$expr": {"$ne": [{"$toInt": "$word_count"}, 0]}}},
         {
-            "$match": {
-                "$expr": {
-                    "$ne": [{"$toInt": "$word_count"}, 0]
-                }
-            }
-        },{
             "$project": {
                 "_id": 0,
                 "title": 1,
@@ -297,17 +292,19 @@ def popular_keywords_last_X_days(day):
     date_X_days_ago = datetime.utcnow() - timedelta(days=day)
     print(date_X_days_ago)
     pipeline = [
-        {
-            "$match": {
-                "$expr": {
-                    "$gte": [
-                        {"$dateFromString": {"dateString": "$published_time"}},
-                        date_X_days_ago,
-                    ]
+            {
+                "$match": {
+                    "$expr": {
+                        "$gte": [
+                            {"$dateFromString": {"dateString": "$published_time"}},
+                            date_X_days_ago,
+                        ]
+                    }
                 }
-            }
-        },
-        {"$project": {"title": 1, "_id": 0}},
+            },
+            {"$unwind": "$keywords"},
+            {"$group": {"_id" : "$keywords", "count": {"$sum": 1}}},
+            {"$sort" : {"count" : -1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
