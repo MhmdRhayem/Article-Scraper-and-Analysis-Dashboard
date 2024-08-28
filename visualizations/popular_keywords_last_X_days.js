@@ -4,13 +4,15 @@ inputContainer.className = "input-container";
 const dateInput = document.createElement("input");
 dateInput.type = "text";
 dateInput.id = "dateInput";
+dateInput.classList.add("InputField");
 dateInput.placeholder = "Enter Day";
 inputContainer.appendChild(dateInput);
 
-const fetchButton = document.createElement("button");
-fetchButton.id = "fetchButton";
-fetchButton.textContent = "Fetch Data";
-inputContainer.appendChild(fetchButton);
+const buttonFetchPopularKeywords = document.createElement("button");
+buttonFetchPopularKeywords.id = "buttonFetchPopularKeywords";
+buttonFetchPopularKeywords.textContent = "Fetch Data";
+buttonFetchPopularKeywords.classList.add("fetchButton");
+inputContainer.appendChild(buttonFetchPopularKeywords);
 
 document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
 
@@ -107,7 +109,7 @@ am5.ready(async function () {
   let data = await getPopularKeywordsLastXDays(15);
 
   document
-    .getElementById("fetchButton")
+    .getElementById("buttonFetchPopularKeywords")
     .addEventListener("click", async function () {
       const day = document.getElementById("dateInput").value;
       let data = await getPopularKeywordsLastXDays(day);
