@@ -473,7 +473,7 @@ def articles_last_X_hours(hour):
 def articles_by_title_length():
     pipeline = [
         {"$group": {"_id": {"$strLenCP": "$title"}, "count": {"$sum": 1}}},
-        {"$sort": {"count": 1}},
+        {"$sort": {"_id": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
