@@ -4,7 +4,7 @@ inputContainer.className = "input-container";
 const articlesByAuthorInput = document.createElement("input");
 articlesByAuthorInput.type = "text";
 articlesByAuthorInput.id = "articlesByAuthorInput";
-articlesByAuthorInput.placeholder = "Enter Article ID";
+articlesByAuthorInput.placeholder = "Enter Author Name";
 articlesByAuthorInput.classList.add("InputField");
 inputContainer.appendChild(articlesByAuthorInput);
 
