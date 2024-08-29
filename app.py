@@ -381,7 +381,7 @@ def articles_grouped_by_month():
                 "count": {"$sum": 1},
             }
         },
-        {"$sort": {"_id.year": -1, "_id.month": -1}},
+        {"$sort": {"_id.year": 1, "_id.month": 1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
