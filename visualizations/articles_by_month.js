@@ -1,3 +1,4 @@
+//TODO: Edit this
 am5.ready(async function () {
   var root = am5.Root.new("chartdiv");
 
@@ -81,26 +82,20 @@ am5.ready(async function () {
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  const min_year = 2012;
-  const max_year = new Date().getFullYear();
-  let year = min_year;
-  data = [];
-
-  while (year <= max_year) {
-
-    for (let month=1;month<=12;month++){
-        const response = await fetch(
-          "http://127.0.0.1:5000/articles_by_month/" + year.toString() + "/"+ month.toString()
-        );
-        articles_by_month = await response.json();
-        if (articles_by_month.length) {
-          data.push({ date: year.toString() + "-" + month.toString(), count: articles_by_month[0].count });
-        }
-    }
-    year++;
+  async function getArticlesGroupedByMonth() {
+    const response = await fetch("http://127.0.0.1:5000/articles_grouped_by_month")
+    const data = await response.json()
+    let articles_by_month = []
+    data.forEach(element=>{
+      articles_by_month.push({
+        date: element._id.year + "-" + element._id.month,
+        count: element.count
+      })
+    })
+    return articles_by_month;
   }
-  data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
+  let data = await getArticlesGroupedByMonth();
+  // data.reverse()
   console.log(data)
 
   xAxis.children.push(
