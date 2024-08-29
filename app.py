@@ -211,6 +211,21 @@ def articles_by_year(year):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_grouped_by_year",methods=["GET"])
+def articles_grouped_by_year():
+    pipeline = [
+        {
+            "$group": {
+                "_id": {
+                    "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 @app.route("/longest_articles", methods=["GET"])
 def longest_articles():
