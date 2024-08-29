@@ -14,7 +14,7 @@ am5.ready(async function () {
       panX: true,
       panY: false,
       wheelX: "panX",
-      wheelY: "zoomY",
+      wheelY: "zoomX",
       pinchZoomX: true,
       paddingLeft: 0,
       layout: root.verticalLayout,
