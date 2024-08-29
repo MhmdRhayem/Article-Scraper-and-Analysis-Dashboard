@@ -65,7 +65,8 @@ am5.ready(async function () {
 
   var xAxis = chart.xAxes.push(
     am5xy.ValueAxis.new(root, {
-      min: 0,
+      min: 0.1,
+      logarithmic:true,
       maxPrecision: 0,
       renderer: am5xy.AxisRendererX.new(root, {
         minGridDistance: 40,
