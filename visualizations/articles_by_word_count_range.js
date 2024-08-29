@@ -82,7 +82,7 @@ am5.ready(async function () {
   });
 
   let bins = 100,
-    max_word_count = 1000;
+  max_word_count = 1000;
 
   async function getLongestArticleWordCount() {
     let response = await fetch("http://127.0.0.1:5000/longest_articles");
