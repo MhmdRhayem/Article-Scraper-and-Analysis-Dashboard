@@ -443,7 +443,7 @@ def articles_grouped_by_coverage():
         {"$unwind": "$classes"},
         {"$match": {"classes.mapping": "coverage"}},
         {"$group": {"_id": "$classes.value", "count": {"$sum": 1}}},
-        {"$sort": {"count": 1}},
+        {"$sort": {"count": -1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
