@@ -75,23 +75,16 @@ am5.ready(async function () {
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  const min_year = 2012;
-  const max_year = new Date().getFullYear();
-  let year = min_year;
-  data = [];
-
-  while (year <= max_year) {
+  
+  async function getArticlesByYear(){
     const response = await fetch(
-      "http://127.0.0.1:5000/articles_by_year/" + year.toString()
+      "http://127.0.0.1:5000/articles_grouped_by_year"
     );
-    articles = await response.json();
-    console.log(articles);
-    if (articles.length) {
-      data.push({ _id: year, count: articles[0].count });
-    }
-    year++;
+    const data = await response.json();
+    return data
   }
-  data.reverse();
+
+  let data = await getArticlesByYear();
   console.log(data);
 
   yAxis.data.setAll(data);
