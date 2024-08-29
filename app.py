@@ -365,6 +365,26 @@ def articles_by_month(year, month):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_grouped_by_month",methods=["GET"])
+def articles_grouped_by_month():
+    pipeline = [
+        {
+            "$group": {
+                "_id": {
+                    "year": {
+                        "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                    "month": {
+                        "$month": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id.year": -1, "_id.month": -1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 @app.route("/articles_by_word_count_range/<int:min>/<int:max>", methods=["GET"])
 def articles_by_word_count_range(min, max):
