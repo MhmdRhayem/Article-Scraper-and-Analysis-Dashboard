@@ -222,7 +222,7 @@ def articles_grouped_by_year():
                 "count": {"$sum": 1},
             }
         },
-        {"$sort": {"_id": 1}},
+        {"$sort": {"_id": -1}},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
