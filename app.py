@@ -117,8 +117,9 @@ def recent_articles():
 def articles_grouped_by_keywords_count():
     pipeline = [
         {"$group": {"_id": {"$size": "$keywords"}, "titles": {"$push": "$title"}}},
-        {"$sort": {"_id": 1}},
+        {"$sort": {"_id": -1}},
         {"$project": {"titles": {"$slice": ["$titles", 5]}}},
+        {"$limit" : 10}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
