@@ -119,7 +119,7 @@ def articles_grouped_by_keywords_count():
         {"$group": {"_id": {"$size": "$keywords"}, "titles": {"$push": "$title"}}},
         {"$sort": {"_id": -1}},
         {"$project": {"titles": {"$slice": ["$titles", 5]}}},
-        {"$limit" : 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
@@ -310,6 +310,37 @@ def articles_updated_after_publication():
             }
         },
         {"$project": {"_id": 0, "title": 1, "published_time": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
+@app.route("/articles_grouped_by_coverage_perYear", methods=["GET"])
+def articles_grouped_by_coverage_perYear():
+    pipeline = [
+        {
+            "$project": {
+                "year": {
+                    "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                },
+                "classes": "$classes",
+            }
+        },
+        {"$unwind": "$classes"},
+        {"$match": {"classes.mapping": "category"}},
+        {
+            "$group": {
+                "_id": {"year": "$year", "coverage": "$classes.value"},
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id.year": 1, "count": -1}},
+        {
+            "$group": {
+                "_id": "$_id.year",
+                "coverages": {"$push": {"category": "$_id.coverage", "count": "$count"}},
+            }
+        },
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
