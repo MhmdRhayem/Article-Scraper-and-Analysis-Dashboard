@@ -338,7 +338,9 @@ def articles_grouped_by_coverage_perYear():
         {
             "$group": {
                 "_id": "$_id.year",
-                "coverages": {"$push": {"category": "$_id.coverage", "count": "$count"}},
+                "coverages": {
+                    "$push": {"category": "$_id.coverage", "count": "$count"}
+                },
             }
         },
     ]
@@ -556,6 +558,17 @@ def articles_by_title_length():
     pipeline = [
         {"$group": {"_id": {"$strLenCP": "$title"}, "count": {"$sum": 1}}},
         {"$sort": {"_id": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
+@app.route("/articles_by_top_keyword_count", methods=["GET"])
+def articles_by_top_keyword_count():
+    pipeline = [
+        {"$group": {"_id": {"$size": "$keywords"}, "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit" : 5}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
