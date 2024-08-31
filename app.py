@@ -113,6 +113,17 @@ def recent_articles():
     return jsonify(result)
 
 
+@app.route("/articles_grouped_by_keywords_count", methods=["GET"])
+def articles_grouped_by_keywords_count():
+    pipeline = [
+        {"$group": {"_id": {"$size": "$keywords"}, "titles": {"$push": "$title"}}},
+        {"$sort": {"_id": 1}},
+        {"$project": {"titles": {"$slice": ["$titles", 5]}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 @app.route("/articles_by_keyword/<keyword>", methods=["GET"])
 def articles_by_keyword(keyword):
     pipeline = [
@@ -211,7 +222,8 @@ def articles_by_year(year):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_grouped_by_year",methods=["GET"])
+
+@app.route("/articles_grouped_by_year", methods=["GET"])
 def articles_grouped_by_year():
     pipeline = [
         {
@@ -226,6 +238,7 @@ def articles_grouped_by_year():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
 
 @app.route("/longest_articles", methods=["GET"])
 def longest_articles():
@@ -365,7 +378,8 @@ def articles_by_month(year, month):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/articles_grouped_by_month",methods=["GET"])
+
+@app.route("/articles_grouped_by_month", methods=["GET"])
 def articles_grouped_by_month():
     pipeline = [
         {
@@ -385,6 +399,7 @@ def articles_grouped_by_month():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
 
 @app.route("/articles_by_word_count_range/<int:min>/<int:max>", methods=["GET"])
 def articles_by_word_count_range(min, max):
