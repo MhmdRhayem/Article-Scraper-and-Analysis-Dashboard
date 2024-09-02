@@ -1,20 +1,16 @@
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
+from transformers import pipeline
+from pymongo import MongoClient
 
-nltk.download('vader_lexicon')
+client = MongoClient("mongodb://localhost:27017/")
+db = client["almayadeen"]
+collection = db["articles"]
 
-sia = SentimentIntensityAnalyzer()
-text = "I love this product"
+sentiment_analysis = pipeline("sentiment-analysis", model="CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment")
+
 
 def classify_sentiment(text):
-    sentiment = sia.polarity_scores(text)
-    compound = sentiment['compound']
-    
-    if compound > 0.05:
-        return 'positive'
-    elif compound < -0.05:
-        return 'negative'
-    else:
-        return 'neutral'
+    result = sentiment_analysis(text)[0]
+    print(sentiment_analysis(text))
+    label = result['label'].lower()
+    return label
 
-print(classify_sentiment(text))
