@@ -1,16 +1,22 @@
-from transformers import pipeline
+from textblob import TextBlob
 from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["almayadeen"]
 collection = db["articles"]
 
-sentiment_analysis = pipeline("sentiment-analysis", model="CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment")
 
+def analyze_sentiment(text):
+    blob = TextBlob(arabic_text)
+    
+    translated_text = blob.translate(to='en')
 
-def classify_sentiment(text):
-    result = sentiment_analysis(text)[0]
-    print(sentiment_analysis(text))
-    label = result['label'].lower()
-    return label
-
+    polarity = translated_text.sentiment.polarity
+    
+    if polarity > 0:
+        sentiment = "Positive"
+    elif polarity < 0:
+        sentiment = "Negative"
+    else:
+        sentiment = "Neutral"
+    return sentiment
