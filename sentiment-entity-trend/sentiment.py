@@ -7,11 +7,9 @@ collection = db["articles"]
 
 
 def analyze_sentiment(text):
-    blob = TextBlob(arabic_text)
-    
-    translated_text = blob.translate(to='en')
+    blob = TextBlob(text)
 
-    polarity = translated_text.sentiment.polarity
+    polarity = blob.sentiment.polarity
     
     if polarity > 0:
         sentiment = "Positive"
@@ -19,4 +17,16 @@ def analyze_sentiment(text):
         sentiment = "Negative"
     else:
         sentiment = "Neutral"
-    return sentiment
+    return (sentiment, polarity)
+
+for doc in collection.find():
+    text = doc.get("full_text", "")
+    overall_sentiment, polarity = analyze_sentiment(text)
+    print(f"Title: {doc.get("title")} : {overall_sentiment}")
+    
+    collection.update_one(
+        {"_id": doc["_id"]}, 
+        {"$set": {"sentiment": overall_sentiment, "polarity": polarity}} 
+    )
+
+
