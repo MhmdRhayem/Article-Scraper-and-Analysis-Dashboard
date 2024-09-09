@@ -596,6 +596,38 @@ def articles_by_sentiment(sentiment):
     return jsonify(result)
 
 
+@app.route("/sentiments_by_month", methods=["GET"])
+def sentiments_by_month():
+    pipeline = [
+        {
+            "$group": {
+                "_id": {
+                    "sentiment": "$sentiment",
+                    "year": {
+                        "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                    "month": {
+                        "$month": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {
+            "$project": {
+                "sentiment": "$_id.sentiment",
+                "year": "$_id.year",
+                "month": "$_id.month",
+                "count": 1,
+                "_id": 0,
+            }
+        },
+        {"$sort": {"year": 1, "month": 1}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 @app.route("/articles_by_entity/<entity>", methods=["GET"])
 def articles_by_entity(entity):
     pipeline = [
