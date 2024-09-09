@@ -573,6 +573,14 @@ def articles_by_top_keyword_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_sentiment_count",methods=["GET"])
+def articles_by_sentiment_count():
+    pipeline = [
+        {"$group": {"_id": "$sentiment","count": {"$sum": 1}}},
+        {"$sort": {"count" : -1}}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
