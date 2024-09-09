@@ -620,5 +620,33 @@ def articles_by_entities_count():
     return jsonify(result)
 
 
+@app.route("/entities_by_year", methods=["GET"])
+def entities_by_year():
+    pipeline = [
+        {"$unwind": "$entities"},
+        {
+            "$group": {
+                "_id": {
+                    "year": {
+                        "$year": {"$dateFromString": {"dateString": "$published_time"}}
+                    },
+                    "entity": "$entities.entity",
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id.year": 1, "count": -1}},
+        {
+            "$group": {
+                "_id": "$_id.year",
+                "entities": {"$push": {"entity": "$_id.entity", "count": "$count"}},
+            }
+        },
+        {"$project": {"_id": 1, "entities": {"$slice": ["$entities", 5]}}},
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

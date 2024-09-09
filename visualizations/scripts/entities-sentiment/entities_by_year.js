@@ -1,14 +1,8 @@
 am5.ready(async function () {
-  // Create root element
-  // https://www.amcharts.com/docs/v5/getting-started/#Root_element
   var root = am5.Root.new("chartdiv");
 
-  // Set themes
-  // https://www.amcharts.com/docs/v5/concepts/themes/
   root.setThemes([am5themes_Animated.new(root)]);
 
-  // Create chart
-  // https://www.amcharts.com/docs/v5/charts/xy-chart/
   var chart = root.container.children.push(
     am5xy.XYChart.new(root, {
       panX: false,
@@ -20,8 +14,6 @@ am5.ready(async function () {
     })
   );
 
-  // Add scrollbar
-  // https://www.amcharts.com/docs/v5/charts/xy-chart/scrollbars/
   chart.set(
     "scrollbarX",
     am5.Scrollbar.new(root, {
@@ -46,8 +38,7 @@ am5.ready(async function () {
   }
   let data = await entities_by_year();
   console.log(data);
-  // Create axes
-  // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+
   var xRenderer = am5xy.AxisRendererX.new(root, {
     minorGridEnabled: true,
   });
@@ -78,8 +69,6 @@ am5.ready(async function () {
     })
   );
 
-  // Add legend
-  // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
   var legend = chart.children.push(
     am5.Legend.new(root, {
       centerX: am5.p50,
@@ -87,8 +76,6 @@ am5.ready(async function () {
     })
   );
 
-  // Add series
-  // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
   function makeSeries(name, fieldName) {
     var series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
@@ -103,14 +90,11 @@ am5.ready(async function () {
     );
 
     series.columns.template.setAll({
-      tooltipText:
-        "{name} : {valueY}",
+      tooltipText: "{name} : {valueY}",
       tooltipY: am5.percent(10),
     });
     series.data.setAll(data);
 
-    // Make stuff animate on load
-    // https://www.amcharts.com/docs/v5/concepts/animations/
     series.appear();
 
     series.bullets.push(function () {
