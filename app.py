@@ -582,5 +582,16 @@ def articles_by_sentiment_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_sentiment/<sentiment>",methods=["GET"])
+def articles_by_sentiment(sentiment):
+    pipeline = [
+        {"$match": {"sentiment": sentiment}},
+        {"$project": {"_id": 0, "title": 1, "polarity": 1}},
+        {"$sort": {"polarity" : -1 if sentiment == "Positive" else 1}},
+        {"$limit" : 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
 if __name__ == "__main__":
     app.run(debug=True)
