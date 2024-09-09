@@ -593,5 +593,16 @@ def articles_by_sentiment(sentiment):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/articles_by_entity/<entity>",methods=["GET"])
+def articles_by_entity(entity):
+    pipeline = [
+        {"$unwind" : "$entities"},
+        {"$match" : {"entities.entity" : entity}},
+        {"$project" : {"_id" : 0, "title" : 1, "entities" : 1}},
+        {"$limit" : 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+    
 if __name__ == "__main__":
     app.run(debug=True)
