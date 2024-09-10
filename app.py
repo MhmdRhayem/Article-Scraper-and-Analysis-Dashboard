@@ -704,6 +704,16 @@ def articles_grouped_by_entity_and_sentiment():
     result = list(collection.aggregate(articles_pipeline))
     return jsonify(result)
 
+@app.route("/top_entities",methods=["GET"])
+def top_entities():
+    pipeline = [
+        {"$unwind": "$entities"},
+        {"$group": {"_id": "$entities.entity", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
