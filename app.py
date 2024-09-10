@@ -3,6 +3,7 @@ from pymongo import MongoClient, TEXT
 from bson import ObjectId
 from datetime import datetime, timedelta
 from flask_cors import CORS
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -715,5 +716,25 @@ def top_entities():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/top_entity_by_sentiment",methods=["GET"])
+def top_entity_by_sentiment():
+    try:
+        response = requests.get("http://127.0.0.1:5000/top_entities")
+        if response.status_code == 200:
+            data = response.json()
+            top_entity = data[0]["_id"]
+            print(top_entity)
+            pipeline = [
+                {"$unwind" : "$entities"},
+                {"$match" : {"entities.entity": top_entity}},
+                {"$group" : {"_id": "$sentiment", "count": {"$sum": 1}}}
+            ]
+            result = list(collection.aggregate(pipeline))
+            return jsonify(result)
+        else:
+            print(f"Error: Received status code {response.status_code}")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
 if __name__ == "__main__":
     app.run(debug=True)
