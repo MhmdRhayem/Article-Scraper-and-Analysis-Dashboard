@@ -2,7 +2,13 @@ am5.ready(async function () {
   async function getTopKeyworeds() {
     const response = await fetch("http://127.0.0.1:5000/top_keywords");
     const data = await response.json();
-    const text = data.map((item) => item._id).join(" ");
+    let text = [];
+    data.forEach((item) => {
+      text.push({
+        keyword: item._id,
+        count: item.count,
+      });
+    });
     return text;
   }
   let text = await getTopKeyworeds();
@@ -33,9 +39,12 @@ am5.ready(async function () {
       maxCount: 100,
       minWordLength: 2,
       maxFontSize: am5.percent(35),
-      text: text,
+      categoryField: "keyword",
+      valueField: "count",
     })
   );
+
+  series.data.setAll(text);
 
   series.labels.template.setAll({
     paddingTop: 5,
@@ -43,5 +52,6 @@ am5.ready(async function () {
     paddingLeft: 5,
     paddingRight: 5,
     fontFamily: "Courier New",
+    tooltipText: "{keyword}: {count}",
   });
 });
