@@ -680,5 +680,30 @@ def entities_by_year():
     return jsonify(result)
 
 
+@app.route("/articles_grouped_by_entity_and_sentiment", methods=["GET"])
+def articles_grouped_by_entity_and_sentiment():
+    pipeline = [
+        {"$unwind": "$entities"},
+        {
+            "$group": {"_id": "$entities.entity", "count": {"$sum": 1}},
+        },
+        {"$sort": {"count": -1}},
+        {"$limit" : 5}
+    ]
+    temp_result = list(collection.aggregate(pipeline))
+    entity_ids = [doc["_id"] for doc in temp_result]
+    
+    articles_pipeline = [
+        {"$unwind" : "$entities"},
+        {
+            "$match": {
+                "entities.entity": {"$in": entity_ids}  # Match documents where entity is in entity_ids
+            }
+        },
+        {"$group" : {"_id": {"entity": "$entities.entity", "sentiment": "$sentiment"}, "count": {"$sum": 1}}},]
+    result = list(collection.aggregate(articles_pipeline))
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
