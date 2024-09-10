@@ -747,6 +747,15 @@ def most_positive_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route("/most_negative_articles",methods=["GET"])
+def most_negative_articles():
+    pipeline = [
+        {"$sort" : {"polarity" : 1}},
+        {"$project" : {"_id" : 0, "title" : 1, "polarity" : 1}},
+        {"$limit" : 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
