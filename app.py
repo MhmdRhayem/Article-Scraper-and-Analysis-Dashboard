@@ -736,5 +736,17 @@ def top_entity_by_sentiment():
     
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
+        
+@app.route("/most_positive_articles",methods=["GET"])
+def most_positive_articles():
+    pipeline = [
+        {"$sort" : {"polarity" : -1}},
+        {"$project" : {"_id" : 0, "title" : 1, "polarity" : 1}},
+        {"$limit" : 10}
+    ]
+    result = list(collection.aggregate(pipeline))
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
