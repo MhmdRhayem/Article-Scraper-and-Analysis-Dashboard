@@ -689,34 +689,44 @@ def articles_grouped_by_entity_and_sentiment():
             "$group": {"_id": "$entities.entity", "count": {"$sum": 1}},
         },
         {"$sort": {"count": -1}},
-        {"$limit" : 5}
+        {"$limit": 5},
     ]
     temp_result = list(collection.aggregate(pipeline))
     entity_ids = [doc["_id"] for doc in temp_result]
-    
+
     articles_pipeline = [
-        {"$unwind" : "$entities"},
+        {"$unwind": "$entities"},
         {
             "$match": {
-                "entities.entity": {"$in": entity_ids}  # Match documents where entity is in entity_ids
+                "entities.entity": {
+                    "$in": entity_ids
+                }  # Match documents where entity is in entity_ids
             }
         },
-        {"$group" : {"_id": {"entity": "$entities.entity", "sentiment": "$sentiment"}, "count": {"$sum": 1}}},]
+        {
+            "$group": {
+                "_id": {"entity": "$entities.entity", "sentiment": "$sentiment"},
+                "count": {"$sum": 1},
+            }
+        },
+    ]
     result = list(collection.aggregate(articles_pipeline))
     return jsonify(result)
 
-@app.route("/top_entities",methods=["GET"])
+
+@app.route("/top_entities", methods=["GET"])
 def top_entities():
     pipeline = [
         {"$unwind": "$entities"},
         {"$group": {"_id": "$entities.entity", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
-        {"$limit": 10}
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/top_entity_by_sentiment",methods=["GET"])
+
+@app.route("/top_entity_by_sentiment", methods=["GET"])
 def top_entity_by_sentiment():
     try:
         response = requests.get("http://127.0.0.1:5000/top_entities")
@@ -725,37 +735,90 @@ def top_entity_by_sentiment():
             top_entity = data[0]["_id"]
             print(top_entity)
             pipeline = [
-                {"$unwind" : "$entities"},
-                {"$match" : {"entities.entity": top_entity}},
-                {"$group" : {"_id": "$sentiment", "count": {"$sum": 1}}}
+                {"$unwind": "$entities"},
+                {"$match": {"entities.entity": top_entity}},
+                {"$group": {"_id": "$sentiment", "count": {"$sum": 1}}},
             ]
             result = list(collection.aggregate(pipeline))
             return jsonify(result)
         else:
             print(f"Error: Received status code {response.status_code}")
-    
+
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
-        
-@app.route("/most_positive_articles",methods=["GET"])
+
+
+@app.route("/most_positive_articles", methods=["GET"])
 def most_positive_articles():
     pipeline = [
-        {"$sort" : {"polarity" : -1}},
-        {"$project" : {"_id" : 0, "title" : 1, "polarity" : 1}},
-        {"$limit" : 10}
+        {"$sort": {"polarity": -1}},
+        {"$project": {"_id": 0, "title": 1, "polarity": 1}},
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-@app.route("/most_negative_articles",methods=["GET"])
+
+@app.route("/most_negative_articles", methods=["GET"])
 def most_negative_articles():
     pipeline = [
-        {"$sort" : {"polarity" : 1}},
-        {"$project" : {"_id" : 0, "title" : 1, "polarity" : 1}},
-        {"$limit" : 10}
+        {"$sort": {"polarity": 1}},
+        {"$project": {"_id": 0, "title": 1, "polarity": 1}},
+        {"$limit": 10},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+
+@app.route("/entity_trends", methods=["GET"])
+def entity_trends():
+    try:
+        response = requests.get("http://127.0.0.1:5000/top_entities")
+
+        if response.status_code == 200:
+            data = response.json()
+            top_entities = [item["_id"] for item in data]
+            print(top_entities)
+        else:
+            print(f"Error: Received status code {response.status_code}")
+
+        pipeline = [
+            {"$unwind": "$entities"},
+            {"$match": {"entities.entity": {"$in": top_entities}}},
+            {
+                "$group": {
+                    "_id": {
+                        "entity": "$entities.entity",
+                        "year": {
+                            "$year": {
+                                "$dateFromString": {"dateString": "$published_time"}
+                            }
+                        },
+                        "month": {
+                            "$month": {
+                                "$dateFromString": {"dateString": "$published_time"}
+                            }
+                        },
+                    },
+                    "count": {"$sum": 1},
+                }
+            },
+            {
+                "$project": {
+                    "entity": "$_id.entity",
+                    "year": "$_id.year",
+                    "month": "$_id.month",
+                    "count": 1,
+                    "_id": 0,
+                }
+            },
+            {"$sort": {"year": 1, "month": 1}},
+        ]
+
+        result = list(collection.aggregate(pipeline))
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
