@@ -1,7 +1,12 @@
 const sentiments = ["Positive", "Negative", "Neutral"];
+const sentimentColors = {
+    Positive: am5.color(0x4caf50),
+    Negative: am5.color(0xf44336),
+    Neutral: am5.color(0x9e9e9e)
+};
 
 async function sentiment_by_month() {
-    const response = await fetch("http://127.0.0.1:5000/sentiments_by_month");
+    const response = await fetch("http://127.0.0.1:5000/sentiment_trends");
     const data = await response.json();
     let formatted_data = {
         Positive: [],
@@ -77,6 +82,8 @@ async function createChart() {
             }));
 
             series.data.setAll(data[sentiment]); 
+
+            series.set("stroke", sentimentColors[sentiment]);
         });
         
         var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {

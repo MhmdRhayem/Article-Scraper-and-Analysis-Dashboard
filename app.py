@@ -597,7 +597,7 @@ def articles_by_sentiment(sentiment):
     return jsonify(result)
 
 
-@app.route("/sentiments_by_month", methods=["GET"])
+@app.route("/sentiment_trends", methods=["GET"])
 def sentiments_by_month():
     pipeline = [
         {
@@ -754,40 +754,6 @@ def most_negative_articles():
         {"$project" : {"_id" : 0, "title" : 1, "polarity" : 1}},
         {"$limit" : 10}
     ]
-    result = list(collection.aggregate(pipeline))
-    return jsonify(result)
-
-@app.route("/sentiment_trends", methods=["GET"])
-def sentiment_by_year():
-    pipeline = [
-        {
-            "$group": {
-                "_id": {
-                    "year": {
-                        "$year": {"$dateFromString": {"dateString": "$published_time"}}
-                    },
-                    "month":{
-                        "$month": {"$dateFromString": {"dateString": "$published_time"}}
-                    },
-                    "sentiment": "$sentiment", 
-                },
-                "count": {"$sum": 1}
-            }
-        },
-  
-        {"$sort": {"_id.year": 1, "_id.month":1 , "count": -1}},
-  
-        {
-            "$group": {
-                "_id": {"year" : "$_id.year","month" : "$_id.month"},
-                "sentiments": {
-                    "$push": {"sentiment": "$_id.sentiment", "count": "$count"}
-                },
-            }
-        },
-        {"$sort": {"_id.year": 1, "_id.month":1 }},
-    ]
-    
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
