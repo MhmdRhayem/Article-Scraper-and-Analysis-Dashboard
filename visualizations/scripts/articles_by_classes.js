@@ -1,4 +1,3 @@
-let div = "articleByClasses"
 am5.ready(async function () {
   var chartDiv = document.getElementById("articleByClasses");
   chartDiv.style.width = "100%";
@@ -39,8 +38,8 @@ am5.ready(async function () {
   var xAxis = chart.xAxes.push(
     am5xy.ValueAxis.new(root, {
       maxDeviation: 0,
-      min : 1,
-      logarithmic : true,
+      min: 1,
+      logarithmic: true,
       numberFormatter: am5.NumberFormatter.new(root, {
         numberFormat: "#,###a",
       }),
