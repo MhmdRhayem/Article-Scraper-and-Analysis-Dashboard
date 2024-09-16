@@ -19,7 +19,27 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn {
+            width: 100%;
+            font-size: 1.2rem;
+            padding: 0.75rem;
+            border-radius: 0.3rem;
+            font-weight: bold; /* Make text bold */
+            text-transform: uppercase; /* Uppercase text */
+        }
 
+    </style>
 </head>
 
 <body id="page-top">
@@ -153,10 +173,13 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between my-4">
-                        <h1 class="h3 mb-0 text-gray-800">Charts</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Articles By</h1>
                         <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
                     </div>
+
+                    <script src="js/load_script_buttons.js"></script>
+                    <div id="button-container" class="row"></div>
                 </div>
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
@@ -193,15 +216,15 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <!-- <script src="js/sb-admin-2.min.js"></script> -->
 
     <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
+    <!-- <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="js/demo/chart-bar-demo.js"></script>
+    <script src="js/demo/chart-bar-demo.js"></script> -->
 
 </body>
 
