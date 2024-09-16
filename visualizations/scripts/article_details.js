@@ -14,7 +14,11 @@ buttonFetchArticleDetails.textContent = "Fetch Data";
 buttonFetchArticleDetails.classList.add("fetchButton");
 inputContainer.appendChild(buttonFetchArticleDetails);
 
-document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
+// Find the div with id articleDetailsDiv
+const articleDetailsDiv = document.getElementById("articleDetailsDiv");
+
+// Append input container inside articleDetailsDiv
+articleDetailsDiv.appendChild(inputContainer);
 
 const container = document.createElement("div");
 container.className = "container";
@@ -44,7 +48,8 @@ table.appendChild(tbody);
 
 container.appendChild(table);
 
-document.body.appendChild(container);
+// Append the container with the table inside articleDetailsDiv
+articleDetailsDiv.appendChild(container);
 
 async function fetchAndPopulateTable(postid) {
   try {
