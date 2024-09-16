@@ -15,6 +15,7 @@ const chartScripts = [
     'articles_count.js',
     'top_author.js',
     'trending_keyword.js',
+    'max_article_length.js',
 ];
 
 for (let script of chartScripts){
