@@ -14,10 +14,10 @@ fetchArticlesByAuthorButton.textContent = "Fetch Data";
 fetchArticlesByAuthorButton.classList.add("fetchButton");
 inputContainer.appendChild(fetchArticlesByAuthorButton);
 
-document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
+document.getElementById("articlesByAuthor").appendChild(inputContainer);
 
 am5.ready(async function () {
-  var root = am5.Root.new("chartdiv");
+  var root = am5.Root.new("articlesByAuthor");
 
   root.setThemes([am5themes_Animated.new(root)]);
 
