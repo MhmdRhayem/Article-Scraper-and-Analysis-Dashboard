@@ -14,6 +14,9 @@ const chartScripts = [
     'positive_articles_count.js',
     'neutral_articles_count.js',
     'negative_articles_count.js',
+    'top_positive_articles.js',
+    'top_negative_articles.js',
+    'sentiment_trends.js'
 ];
 
 for (let script of chartScripts){
