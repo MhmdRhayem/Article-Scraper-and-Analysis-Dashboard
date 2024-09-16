@@ -11,11 +11,12 @@ function include(file) {
 
 path_to_scripts = "../../visualizations/scripts/"
 const chartScripts = [
-    'articles_by_classes.js',
     'articles_count.js',
     'top_author.js',
     'trending_keyword.js',
     'max_article_length.js',
+    'articles_by_classes.js',
+    'articles_by_language.js',
 ];
 
 for (let script of chartScripts){
