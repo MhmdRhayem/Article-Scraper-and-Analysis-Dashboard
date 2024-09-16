@@ -825,12 +825,19 @@ def entity_trends():
 def get_scriptfiles_names():
     scripts_names = []
     scripts_folder = './visualizations/scripts'
+    
     for root, dirs, files in os.walk(scripts_folder):
         for file in files:
             if file.endswith('.js'):
-                scripts_names.append(file)
+                # Get the relative path from the scripts_folder
+                relative_path = os.path.relpath(os.path.join(root, file), scripts_folder)
+                # Normalize the path to use forward slashes
+                normalized_path = relative_path.replace(os.sep, '/')
+                scripts_names.append(normalized_path)
+    
     print(scripts_names)
     return scripts_names
+
 
 if __name__ == "__main__":
     app.run(debug=True)
