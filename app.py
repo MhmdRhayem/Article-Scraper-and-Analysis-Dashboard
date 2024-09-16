@@ -592,7 +592,7 @@ def articles_by_sentiment(sentiment):
         {"$match": {"sentiment": sentiment}},
         {"$project": {"_id": 0, "title": 1, "polarity": 1}},
         {"$sort": {"polarity": -1 if sentiment == "Positive" else 1}},
-        {"$limit": 10},
+        {"$limit": 50},
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
