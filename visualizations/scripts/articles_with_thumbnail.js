@@ -1,5 +1,8 @@
 am5.ready(async function () {
-  var root = am5.Root.new("chartdiv");
+  var chartDiv = document.getElementById("articlesWithThumbnail");
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "500px";
+  var root = am5.Root.new("articlesWithThumbnail");
 
   root.setThemes([am5themes_Animated.new(root)]);
 

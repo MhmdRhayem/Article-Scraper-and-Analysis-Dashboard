@@ -1,6 +1,8 @@
 am5.ready(async function () {
-  var root = am5.Root.new("chartdiv");
-
+  var chartDiv = document.getElementById("articlesByWordCountRange");
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "500px";
+  var root = am5.Root.new("articlesByWordCountRange");
   root.setThemes([am5themes_Animated.new(root)]);
 
   var chart = root.container.children.push(

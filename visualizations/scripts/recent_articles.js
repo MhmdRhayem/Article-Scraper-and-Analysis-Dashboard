@@ -21,7 +21,7 @@ thead.appendChild(headerRow);
 table.appendChild(thead);
 
 const tbody = document.createElement("tbody");
-tbody.id = "articleTableBody";
+tbody.id = "recentArticles";
 table.appendChild(tbody);
 
 container.appendChild(table);

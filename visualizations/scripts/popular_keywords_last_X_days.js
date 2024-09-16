@@ -14,11 +14,14 @@ buttonFetchPopularKeywords.textContent = "Fetch Data";
 buttonFetchPopularKeywords.classList.add("fetchButton");
 inputContainer.appendChild(buttonFetchPopularKeywords);
 
-document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
+const chartContainer = document.querySelector(".chartContainer");
+chartContainer.appendChild(inputContainer);
 
 am5.ready(async function () {
-  var root = am5.Root.new("chartdiv");
-
+  var root = am5.Root.new("popularKeywordsLastXDays");
+  var chartDiv = document.getElementById("popularKeywordsLastXDays");
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "400px";
   root.setThemes([am5themes_Animated.new(root)]);
 
   var chart = root.container.children.push(
@@ -88,7 +91,7 @@ am5.ready(async function () {
     return data;
   }
 
-  let data = await getPopularKeywordsLastXDays(15);
+  let data = await getPopularKeywordsLastXDays(30);
 
   document
     .getElementById("buttonFetchPopularKeywords")

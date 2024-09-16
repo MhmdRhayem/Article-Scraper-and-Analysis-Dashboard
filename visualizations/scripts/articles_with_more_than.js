@@ -14,11 +14,14 @@ buttonArticlesByNumber.textContent = "Fetch Data";
 buttonArticlesByNumber.classList.add("fetchButton");
 inputContainer.appendChild(buttonArticlesByNumber);
 
-document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
+const chartContainer = document.querySelector(".chartContainer");
+chartContainer.appendChild(inputContainer);
 
 am5.ready(async function () {
-    var root = am5.Root.new("chartdiv");
-  
+    var root = am5.Root.new("articlesWithMoreThan");
+    var chartDiv = document.getElementById("articlesWithMoreThan");
+    chartDiv.style.width = "100%";
+    chartDiv.style.height = "400px";
     root.setThemes([am5themes_Animated.new(root)]);
   
     var chart = root.container.children.push(
@@ -92,33 +95,6 @@ am5.ready(async function () {
     series.columns.template.adapters.add("stroke", function (stroke, target) {
       return chart.get("colors").getIndex(series.columns.indexOf(target));
     });
-    
-    xAxis.children.push(
-      am5.Label.new(root, {
-        text: "Articles Count",
-        fontSize: "1em",
-        fontWeight: "600",
-        fill: am5.color(0x555555),
-        x: am5.p50,
-        centerX: am5.p50,
-        centerY: am5.p100,
-        dy: 20,
-      })
-    );
-  
-    yAxis.children.unshift(
-      am5.Label.new(root, {
-        text: "Type",
-        fontSize: "1em",
-        fontWeight: "600",
-        fill: am5.color(0x555555),
-        rotation: -90,
-        y: am5.p50,
-        centerY: am5.p50,
-        centerX: am5.p100,
-        dx: -30,
-      })
-    );
   
     async function getArticlesNumber(number){
         const response = await fetch(`http://127.0.0.1:5000/articles_with_more_than/${number}`)

@@ -15,7 +15,10 @@ am5.ready(async function () {
 
   console.log(text);
 
-  let root = am5.Root.new("chartdiv");
+  var chartDiv = document.getElementById("topKeywords");
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "500px";
+  var root = am5.Root.new("topKeywords");
 
   root.setThemes([am5themes_Animated.new(root)]);
 

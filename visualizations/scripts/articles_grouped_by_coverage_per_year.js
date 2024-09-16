@@ -1,6 +1,8 @@
-am5.ready(async function() {
-
-  var root = am5.Root.new("chartdiv");
+am5.ready(async function () {
+  var chartDiv = document.getElementById("articlesGroupedByCoveragePerYear");
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "500px";
+  var root = am5.Root.new("articlesGroupedByCoveragePerYear");
   
 
   root.setThemes([

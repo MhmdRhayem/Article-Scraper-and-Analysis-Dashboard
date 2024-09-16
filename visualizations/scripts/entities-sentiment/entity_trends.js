@@ -34,8 +34,11 @@ async function createChart() {
     }
   const data = await entity_trends();
 
-  am5.ready(function () {
-    var root = am5.Root.new("chartdiv");
+  am5.ready(async function () {
+    var chartDiv = document.getElementById("entityTrends");
+    chartDiv.style.width = "100%";
+    chartDiv.style.height = "500px";
+    var root = am5.Root.new("entityTrends");
 
     const myTheme = am5.Theme.new(root);
     myTheme.rule("AxisLabel", ["minor"]).setAll({ dy: 1 });

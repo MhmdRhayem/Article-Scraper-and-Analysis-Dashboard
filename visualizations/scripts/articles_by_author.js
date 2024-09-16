@@ -15,7 +15,9 @@ fetchArticlesByAuthorButton.classList.add("fetchButton");
 inputContainer.appendChild(fetchArticlesByAuthorButton);
 
 document.getElementById("articlesByAuthor").appendChild(inputContainer);
-
+var chartDiv = document.getElementById("articlesByAuthor");
+chartDiv.style.width = "100%";
+chartDiv.style.height = "400px";
 am5.ready(async function () {
   var root = am5.Root.new("articlesByAuthor");
 
@@ -131,18 +133,6 @@ am5.ready(async function () {
     })
   );
 
-  xAxis.children.push(
-    am5.Label.new(root, {
-      text: "Articles Count",
-      fontSize: "1em",
-      fontWeight: "600",
-      fill: am5.color(0x555555),
-      x: am5.p50,
-      centerX: am5.p50,
-      centerY: am5.p100,
-      dy: 20,
-    })
-  );
 
   series.appear(1000);
   chart.appear(1000, 100);

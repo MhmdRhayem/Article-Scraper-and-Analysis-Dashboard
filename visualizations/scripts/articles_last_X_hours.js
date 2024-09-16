@@ -14,11 +14,15 @@ btnArticlesLastHours.textContent = "Fetch Data";
 btnArticlesLastHours.classList.add("fetchButton");
 inputContainer.appendChild(btnArticlesLastHours);
 
-document.body.insertBefore(inputContainer, document.getElementById("chartdiv"));
+const chartContainer = document.querySelector(".chartContainer");
+chartContainer.appendChild(inputContainer);
 
 am5.ready(async function () {
-    var root = am5.Root.new("chartdiv");
-  
+    var root = am5.Root.new("articlesLastXHours");
+    var chartDiv = document.getElementById("articlesLastXHours");
+    chartDiv.style.width = "100%";
+    chartDiv.style.height = "400px";
+
     root.setThemes([am5themes_Animated.new(root)]);
   
     var chart = root.container.children.push(
