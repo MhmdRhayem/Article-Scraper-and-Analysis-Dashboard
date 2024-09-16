@@ -15,8 +15,8 @@ const chartScripts = [
     'top_author.js',
     'trending_keyword.js',
     'max_article_length.js',
-    'articles_by_classes.js',
-    'articles_by_language.js',
+    'articles_by_year.js',
+    'articles_by_month.js',
     'articles_by_date.js',
     'articles_by_top_keyword_count.js',
 ];
