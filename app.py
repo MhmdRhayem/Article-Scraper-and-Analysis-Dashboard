@@ -4,6 +4,7 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 from flask_cors import CORS
 import requests
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -820,6 +821,16 @@ def entity_trends():
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
+@app.route("/get_scriptfiles_names",methods=["GET"])
+def get_scriptfiles_names():
+    scripts_names = []
+    scripts_folder = './visualizations/scripts'
+    for root, dirs, files in os.walk(scripts_folder):
+        for file in files:
+            if file.endswith('.js'):
+                scripts_names.append(file)
+    print(scripts_names)
+    return scripts_names
 
 if __name__ == "__main__":
     app.run(debug=True)
