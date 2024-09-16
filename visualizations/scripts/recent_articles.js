@@ -1,15 +1,16 @@
-const container = document.createElement("div");
+// Get the container with the class 'chartContainer'
+const container = document.getElementsByClassName("chartContainer")[0];
+
+// Change the class name of the container (if needed for styling purposes)
 container.className = "container";
 
-const header = document.createElement("h2");
-header.textContent = "Article Details";
-container.appendChild(header);
-
+// Create the table structure
 const table = document.createElement("table");
 
 const thead = document.createElement("thead");
 const headerRow = document.createElement("tr");
 
+// Define headers
 const headers = ["Article Title", "Keywords", "Publication Date", "URL"];
 headers.forEach((text) => {
   const th = document.createElement("th");
@@ -24,19 +25,20 @@ const tbody = document.createElement("tbody");
 tbody.id = "recentArticles";
 table.appendChild(tbody);
 
+// Append the table to the container
 container.appendChild(table);
 
-document.body.appendChild(container);
-
+// Function to fetch and populate recent articles
 async function getRecentArticles() {
   try {
-    const response = await fetch(
-      "http://127.0.0.1:5000/recent_articles"
-    );
+    const response = await fetch("http://127.0.0.1:5000/recent_articles");
     const data = await response.json();
-    console.log(data)
+    console.log(data);
+
+    // Clear the existing rows in the table body
     tbody.innerHTML = "";
 
+    // Populate the table with data
     data.forEach((article) => {
       const row = document.createElement("tr");
 
@@ -68,4 +70,6 @@ async function getRecentArticles() {
     console.error("Error fetching data:", error);
   }
 }
+
+// Call the function to fetch and display articles
 getRecentArticles();
