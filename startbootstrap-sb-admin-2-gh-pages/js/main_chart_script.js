@@ -18,6 +18,7 @@ const chartScripts = [
     'articles_by_classes.js',
     'articles_by_language.js',
     'articles_by_date.js',
+    'articles_by_top_keyword_count.js',
 ];
 
 for (let script of chartScripts){

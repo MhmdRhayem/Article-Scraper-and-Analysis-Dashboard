@@ -48,13 +48,6 @@ am5.ready(async function () {
       renderer: yRenderer
     }));
     
-    yAxis.children.push(am5.Label.new(root, {
-      rotation: -90,
-      text: "Articles Count",
-      y: am5.percent(50),
-      centerX: am5.p50
-    }));
-    
     // Add series
     var series = chart.series.push(am5radar.RadarColumnSeries.new(root, {
       name: "Series 1",
@@ -96,17 +89,6 @@ am5.ready(async function () {
     // Make stuff animate on load
     series.appear(1000);
     chart.appear(1000, 100);
-    
-    // Add labels for clarity
-    chart.children.unshift(am5.Label.new(root, {
-      text: "Keywords Count vs Articles Count",
-      fontSize: 20,
-      fontWeight: "bold",
-      x: am5.p50,
-      centerX: am5.p50,
-      y: am5.percent(5),
-      y: 0
-    }));
     
     });
 
