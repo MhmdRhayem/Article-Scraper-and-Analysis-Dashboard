@@ -12,7 +12,7 @@ async function fetchTotalArticles() {
     const data = await response.json();
     let articlesCount = 0;
     data.forEach(ele => {
-        if (ele._id = "Negative"){
+        if (ele._id == "Negative"){
             articlesCount = ele.count;
         }
     })
