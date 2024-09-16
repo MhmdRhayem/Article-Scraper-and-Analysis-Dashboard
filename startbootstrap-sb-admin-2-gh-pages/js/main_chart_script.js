@@ -17,6 +17,7 @@ const chartScripts = [
     'max_article_length.js',
     'articles_by_classes.js',
     'articles_by_language.js',
+    'articles_by_date.js',
 ];
 
 for (let script of chartScripts){
