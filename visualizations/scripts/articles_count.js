@@ -1,4 +1,4 @@
-    const totalArticlesDiv = document.getElementById("totalArticles");
+    const totalArticlesDiv = document.getElementById("articlesCount");
   
     async function fetchTotalArticles() {
       try {

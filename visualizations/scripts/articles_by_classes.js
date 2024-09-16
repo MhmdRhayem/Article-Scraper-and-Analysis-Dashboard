@@ -1,8 +1,8 @@
 am5.ready(async function () {
-  var chartDiv = document.getElementById("articleByClasses");
+  var chartDiv = document.getElementById("articlesByClasses");
   chartDiv.style.width = "100%";
   chartDiv.style.height = "500px";
-  var root = am5.Root.new("articleByClasses");
+  var root = am5.Root.new("articlesByClasses");
 
   root.setThemes([am5themes_Animated.new(root)]);
 
