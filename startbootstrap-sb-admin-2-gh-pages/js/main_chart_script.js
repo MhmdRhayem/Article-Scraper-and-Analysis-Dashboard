@@ -13,7 +13,8 @@ path_to_scripts = "../../visualizations/scripts/"
 const chartScripts = [
     'articles_by_classes.js',
     'articles_count.js',
-    'top_author.js'
+    'top_author.js',
+    'trending_keyword.js',
 ];
 
 for (let script of chartScripts){
