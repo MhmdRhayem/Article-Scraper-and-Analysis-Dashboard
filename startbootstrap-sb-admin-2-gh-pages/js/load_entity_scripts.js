@@ -9,9 +9,12 @@ function include(file) {
  
 }
 
-path_to_scripts = "../../visualizations/scripts/entities-sentiment/"
+path_to_scripts = "../../visualizations/scripts/entity/"
 const chartScripts = [
-
+    'top_entities.js',
+    'top_entity_by_sentiment.js',
+    'entities_by_year.js',
+    'entity_trends.js'
 ];
 
 for (let script of chartScripts){
