@@ -9,7 +9,7 @@ function include(file) {
  
 }
 
-path_to_scripts = "../../visualizations/scripts/"
+path_to_scripts = "../../visualizations/scripts/general/"
 const chartScripts = [
     'articles_count.js',
     'top_author.js',
