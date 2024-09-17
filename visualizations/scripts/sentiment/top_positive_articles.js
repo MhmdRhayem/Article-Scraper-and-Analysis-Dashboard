@@ -23,7 +23,7 @@ am5.ready(async function () {
         maxDeviation: 0.3,
         categoryField: "title",
         renderer: am5xy.AxisRendererX.new(root, {}),
-        tooltip: am5.Tooltip.new(root, {}),
+        // tooltip: am5.Tooltip.new(root, {}),
       })
     );
     xAxis.get("renderer").labels.template.set("visible", false);
