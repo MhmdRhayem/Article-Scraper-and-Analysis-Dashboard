@@ -20,12 +20,6 @@ am5.ready(async function () {
     })
   );
 
-  // Remove the labels
-  series.labels.template.set("forceHidden", true); // Hide labels
-
-  // Optionally, you can also hide the ticks if you want to completely remove labels
-  series.ticks.template.set("forceHidden", true); // Hide ticks if needed
-
   async function getArticlesByLanguage() {
     const response = await fetch("http://127.0.0.1:5000/articles_by_language");
     const data = await response.json();
