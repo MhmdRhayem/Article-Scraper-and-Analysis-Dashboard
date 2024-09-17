@@ -1,41 +1,92 @@
-# Article Scraper
 
-## Overview
+# Article Scraper and Analysis Dashboard
 
-ArticleScraper is a Python project designed to scrape articles from a website using sitemap URLs, extract metadata, and save the articles in JSON format. The project leverages the `requests` library for making HTTP requests, `BeautifulSoup` for parsing HTML/XML, and Python's `dataclasses` for structured data management.
+## Project Overview
+
+This project is an **Article Scraper and Analysis Dashboard** that scrapes articles from the web, stores them in a MongoDB collection, and provides insightful visualizations and analysis through a Flask-based web application. The analysis includes **entity recognition** and **sentiment analysis**. The results are displayed on a dashboard with multiple pages, providing users with different types of visualizations.
+
+### Project Structure
+
+1. **`web_scraper.py`**: A Python script to scrape articles from websites using Bootstrap and store them in JSON format. Articles are organized monthly in the `articles` folder.
+2. **`data_storage.py`**: A file to store scraped articles in a MongoDB collection.
+3. **`app.py`**: A Flask application that serves as the backend. It uses APIs to retrieve and query data from MongoDB.
+4. **`sentiment-entity-trend` folder**: contains python scripts to performs entity and sentiment analysis using **TextBlob** and **Stanza**. 
+5. **`visualizations` folder**: Contains JavaScript scripts using the **am5charts** library to generate visualizations.
+6. **`startbootstrap-sb-admin-2-gh-pages` folder**: The dashboard folder with the following main pages:
+   - `index.html`: General dashboard showing overall visualizations.
+   - `sentiment.html`: Dashboard with sentiment analysis visualizations.
+   - `entity.html`: Dashboard with entity analysis visualizations.
+   - `charts.html`: A page with buttons to view charts under three categories: General, Entity, Sentiment.
+   - `blank.html`: A template page to display custom charts.
 
 ## Features
 
-- **Fetch Sitemap URLs:** Extracts monthly sitemap URLs from a primary sitemap index.
-- **Scrape Articles:** Downloads and parses articles, extracting metadata like title, author, keywords, and full text.
-- **Save to JSON:** Saves scraped articles into JSON files, organized by the year and month of publication.
+- **Web scraping**: Uses Bootstrap to scrape articles from websites.
+- **MongoDB integration**: Articles are stored in MongoDB for querying and analysis.
+- **Sentiment Analysis**: Using TextBlob to analyze the sentiment of the scraped articles.
+- **Entity Recognition**: Using Stanza to extract entities from the articles.
+- **Dynamic Visualizations**: Created using the am5charts library to display insightful visual data.
+- **Interactive Dashboard**: Built with Bootstrap, the dashboard provides an intuitive UI to explore the data and visualizations.
 
-## Prerequisites
+## Usage
 
-- Python 3.7 or later
-- Libraries: Install the required libraries using the following command:
+### Web Scraping
+- Run `web_scraper.py` to scrape articles and store them in the `articles` folder as JSON files, organized by month.
 
-  ```bash
-  pip install requests beautifulsoup4 lxml
-  ```
+### Data Storage
+- Run `data_storage.py` to store the scraped articles in a MongoDB collection.
 
-## Usage 
-1. Clone the repository 
-``` bash
-git clone https://github.com/MhmdRhayem/Article-Scraper.git
-```
-2. Run the scraper
-``` bash 
-python web_scraper.py
-```
+### API and Data Analysis
+- Run `app.py` to start the Flask server. This server serves APIs for querying articles, performing sentiment analysis, and entity recognition.
 
-## Output 
-The articles will be saved in the `./articles` directory, organized by year and month.
+### Sentiment Analysis
+- Run `sentiment.py` to get the sentiment for each article and store it in MongoDB collection.
 
-## Code Structure 
-- `Article`: A data class representing an article with fields like url, post_id, title, keywords, etc.
-- `fetch_data(url)`: A function to fetch data from a URL.
-- `save_articles(articles_list)`: A function to save a list of articles to a JSON file.
-- `SitemapParser`: A class to parse the main sitemap and retrieve monthly sitemap URLs.
-- `ArticleScraper`: A class to scrape and parse individual articles from their URLs.
-- `main()`: The main function to control the flow of the program.
+### Entity Analysis
+- Run `entity.py` to get the entities from all the articles and store them as an array of objects in MongoDB
+
+## Setup Instructions
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MhmdRhayem/Article-Scraper-and-Analysis-Dashboard
+   ```
+
+2. Configure MongoDB and ensure it's running.
+
+3. Start the Flask app:
+   ```bash
+   python app.py
+   ```
+
+4. Access the dashboard at `./startbootstrap-sb-admin-2-gh-pages/index.html`.
+
+## Screenshots
+
+### **General Dashboard:**
+  ![General Dashboard Screenshot](./screenshots/general_dashboard.png)
+
+### **Sentiment Analysis Dashboard:**
+  ![Sentiment Dashboard Screenshot](./screenshots/sentiment_dashboard.png)
+
+### **Entity Analysis Dashboard:**
+  ![Entity Dashboard Screenshot](./screenshots/entity_dashboard.png)
+
+### **Charts Selection Page:**
+  ![Charts Page Screenshot](./screenshots/charts.png)
+
+## Technologies Used
+
+- **Python**: For web scraping, data processing, and API creation.
+- **Flask**: To build the server and APIs.
+- **MongoDB**: For data storage.
+- **am5charts**: For generating visualizations.
+- **TextBlob** and **Stanza**: For sentiment and entity analysis.
+- **Bootstrap**: For front-end design and dashboard layout.
+
+## Future Enhancements
+
+- **Cloud Deployment**: Deploy the Flask application and MongoDB instance to a cloud platform (e.g., AWS, Heroku, Google Cloud) to make the project accessible from anywhere and to handle scalability.
+- **Backend Integration**: Connect the dashboard pages more seamlessly with the backend by using AJAX or fetch API to dynamically load data and update visualizations without needing to reload the page.
+- **User Authentication**: Implement user authentication and authorization to secure access to the dashboard and allow different levels of user permissions.
+- **Automate Articles Extraction**: Implement a scheduling mechanism to automatically scrape and update articles on a regular basis.
