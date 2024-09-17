@@ -100,32 +100,32 @@ am5.ready(async function () {
   // data.reverse()
   console.log(data)
 
-  xAxis.children.push(
-    am5.Label.new(root, {
-      text: "Date",
-      fontSize: "1em",
-      fontWeight: "600",
-      fill: am5.color(0x555555),
-      x: am5.p50,
-      centerX: am5.p50,
-      centerY: am5.p100,
-      dy: 20,
-    })
-  );
+  // xAxis.children.push(
+  //   am5.Label.new(root, {
+  //     text: "Date",
+  //     fontSize: "1em",
+  //     fontWeight: "600",
+  //     fill: am5.color(0x555555),
+  //     x: am5.p50,
+  //     centerX: am5.p50,
+  //     centerY: am5.p100,
+  //     dy: 20,
+  //   })
+  // );
 
-  yAxis.children.unshift(
-    am5.Label.new(root, {
-      text: "Articles Count",
-      fontSize: "1em",
-      fontWeight: "600",
-      fill: am5.color(0x555555),
-      rotation: -90,
-      y: am5.p50,
-      centerY: am5.p50,
-      centerX: am5.p100,
-      dx: -30,
-    })
-  );
+  // yAxis.children.unshift(
+  //   am5.Label.new(root, {
+  //     text: "Articles Count",
+  //     fontSize: "1em",
+  //     fontWeight: "600",
+  //     fill: am5.color(0x555555),
+  //     rotation: -90,
+  //     y: am5.p50,
+  //     centerY: am5.p50,
+  //     centerX: am5.p100,
+  //     dx: -30,
+  //   })
+  // );
 
 
   xAxis.data.setAll(data);
