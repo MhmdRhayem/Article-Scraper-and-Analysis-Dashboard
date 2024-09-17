@@ -9,7 +9,7 @@ function include(file) {
  
 }
 
-path_to_scripts = "../../visualizations/scripts/entities-sentiment/"
+path_to_scripts = "../../visualizations/scripts/sentiment/"
 const chartScripts = [
     'positive_articles_count.js',
     'neutral_articles_count.js',
