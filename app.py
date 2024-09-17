@@ -823,7 +823,7 @@ def entity_trends():
 
 @app.route("/get_scriptfiles_names",methods=["GET"])
 def get_scriptfiles_names():
-    scripts_names = []
+    scripts_names = {}
     scripts_folder = './visualizations/scripts'
     
     for root, dirs, files in os.walk(scripts_folder):
@@ -833,10 +833,15 @@ def get_scriptfiles_names():
                 relative_path = os.path.relpath(os.path.join(root, file), scripts_folder)
                 # Normalize the path to use forward slashes
                 normalized_path = relative_path.replace(os.sep, '/')
-                scripts_names.append(normalized_path)
+                curr_folder = normalized_path.split("/")[0]
+                if curr_folder in scripts_names:
+                    scripts_names[curr_folder].append(normalized_path)
+                else:
+                    scripts_names[curr_folder] = [normalized_path]
+                # scripts_names.append(normalized_path)
     
     print(scripts_names)
-    return scripts_names
+    return jsonify(scripts_names)
 
 
 if __name__ == "__main__":
